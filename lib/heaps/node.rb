@@ -51,14 +51,30 @@ module Heaps
       true
     end
 
+    def to_a
+      left.to_a + [rating] + right.to_a
+    end
+
+    def include?(value)
+      case rating <=> value
+        when 1 then left.include?(value)
+        when -1 then right.include?(value)
+        when 0 then true # the current node is equal to the value
+      end
+    end
+
+    def inspect
+      "{#{rating}:#{left.inspect}|#{right.inspect}}"
+    end
+
     private
 
     def insert_left(node)
-      left.insert(node) or self.left = node
+      left.insert(node) || ( self.left = node; node.parent = self )
     end
 
     def insert_right(node)
-      right.insert(node) or self.right = node
+      right.insert(node) || ( self.right = node; node.parent = self )
     end
 
   end

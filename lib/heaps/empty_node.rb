@@ -36,8 +36,15 @@ module Heaps
     def valid?
       false
     end
+    def to_a
+      []
+    end
 
-    def inspect
+    def include?(*)
+      false
+    end
+
+    def inspect(*)
       "{}"
     end
   end

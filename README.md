@@ -3,6 +3,12 @@
 #### A min-heap is a binary tree data structure in which the data of each node is less than or equal to the data of that node’s children and the tree is complete.
 
 #### Required Behaviors
+
+A Binary Heap is a Binary Tree with following properties.
+1) It’s a complete tree (All levels are completely filled except possibly the last level and the last level has all keys as left as possible). This property of Binary Heap makes them suitable to be stored in an array.
+
+2) A Binary Heap is either Min Heap or Max Heap. In a Min Binary Heap, the key at root must be minimum among all keys present in Binary Heap. The same property must be recursively true for all nodes in Binary Tree. Max Binary Heap is similar to Min Heap.
+
 * All child nodes are larger than their parent
 * The smallest element of the min-heap is at the root
 * They can refer to another node to the left with a smaller value
@@ -10,7 +16,9 @@
 
 * The children of an element at a given index i will always be in 2i and 2i + 1.
 * The parent of a node will be at the index i/2.
+* A binary tree is a ***complete*** if all levels are completely filled except possibly the last level and the last level has all keys as left as possible.
 
+Ref: http://www.geeksforgeeks.org/binary-heap/
 
 To experiment with that code, run `bin/console` for an interactive prompt.
 

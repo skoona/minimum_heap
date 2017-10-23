@@ -34,14 +34,20 @@ module Heaps
     def insert(node)
       return if node.nil?
       puts "Inserting #{node.title}: #{node.rating}"
+      puts "\tBefore: #{root.inspect}"
+
+      @count += 1
 
       parent_node = find_parent(root, node)
-      puts parent_node.inspect
-      if parent_node == root or parent_node.is_a?(EmptyNode)
+      if parent_node == root
         root_swap(node)
-      else
+      elsif parent_node.parent.is_a?(EmptyNode)
         parent_node.insert(node)
+      else
+        parent_node.parent.insert(node)
+        swap_up(node) if count > 3
       end
+      puts "\t After: #{root.inspect}"
 
       # was it assigned?  parent set?
 
@@ -56,19 +62,23 @@ module Heaps
 
     # existing node with rating less than node's
     def find_parent(tree_node, node)
+      parent_node = tree_node
       case tree_node <=> node
         when -1
           puts "Less than #{tree_node.title}"
-          find_parent(tree_node.right, node) if tree_node.right.valid?
+          if tree_node.left.valid?
+            parent_node = find_parent(tree_node.left, node)
+          end
         when 1
           puts "More than #{tree_node.title}"
-          find_parent(tree_node.left, node) if tree_node.left.valid?
+          if tree_node.right.valid?
+            parent_node = find_parent(tree_node.right, node)
+          end
         else
           puts "Invalid Comparison #{tree_node.title}"
-        # tree_node = EmptyNode.new
       end
-      puts "Tree Node's Rating is #{tree_node.rating}"
-      tree_node
+      puts "Tree Node's Rating is #{parent_node.rating}"
+      parent_node
     end
 
     def root_swap(node)
@@ -88,32 +98,27 @@ module Heaps
       return nil if node.nil?
 
       current_location = 0
-      while start_node.left != nil do
-        start_node = start_node.left
-        current_location += 1
-        break if current_location > row_max_count
-      end
 
       if target_location <= (row_max_count / 2)
         # go left
-        if start_node.left == nil
+        if !start_node.left
           start_node.left = node
           node.parent = start_node
           swap_up(node)
           return
         else
-          insert(start_node.left, node)
+          insertp( node)
         end
 
       else
         # go right
-        if start_node.right == nil
+        if !start_node.right
           start_node.right = node
           node.parent = root
           swap_up(node)
           return
         else
-          insert(start_node.right, node)
+          insertp( node)
         end
       end
 
@@ -133,7 +138,7 @@ module Heaps
         # Handle the lefts
         node_left = node.left
 
-        unless grandparent.nil?
+        if grandparent.valid?
           grandparent.left = node
         else
           @root = node
@@ -145,7 +150,7 @@ module Heaps
         # Hangle the rights
         node_right = node.right
 
-        unless grandparent.nil?
+        if grandparent.valid?
           grandparent.right = node
           node.right = parent_node
         else
@@ -183,8 +188,7 @@ module Heaps
       end
     end
 
-    def display_tree(node)
-      return nil if node.nil?
+    def display_tree(node=@root)
       queue = Queue.new
       queue.enq(node)
       until queue.empty?
