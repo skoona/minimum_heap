@@ -1,15 +1,26 @@
-# MinimumHeap
+# Heaps
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/MinimumHeap`. To experiment with that code, run `bin/console` for an interactive prompt.
+#### A min-heap is a binary tree data structure in which the data of each node is less than or equal to the data of that node’s children and the tree is complete.
 
-TODO: Delete this and the text above, and describe your gem
+#### Required Behaviors
+* All child nodes are larger than their parent
+* The smallest element of the min-heap is at the root
+* They can refer to another node to the left with a smaller value
+* They can refer to another node to the right with a larger value
+
+* The children of an element at a given index i will always be in 2i and 2i + 1.
+* The parent of a node will be at the index i/2.
+
+
+To experiment with that code, run `bin/console` for an interactive prompt.
+
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'MinimumHeap'
+gem 'heaps'
 ```
 
 And then execute:
@@ -18,7 +29,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install MinimumHeap
+    $ gem install heaps
 
 ## Usage
 
@@ -32,7 +43,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/MinimumHeap. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/heaps. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 
 ## License
