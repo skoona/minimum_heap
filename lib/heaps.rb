@@ -10,16 +10,11 @@
 # - They can refer to another node to the left with a smaller value
 # - They can refer to another node to the right with a larger value
 
-# - The children of an element at a given index i will always be in 2i and 2i + 1.
-# - The parent of a node will be at the index i/2.
-
 require "heaps/version"
 require "heaps/empty_node"
 require "heaps/node"
 
 module Heaps
-
-  class InvalidNode < StandardError; end
 
   class MinimumHeap
     attr_reader :root
@@ -31,174 +26,82 @@ module Heaps
       @position = 1
     end
 
+    # root must be lowest rating
+    # Parents must be lower rating than children
+    # - test for lower than root
+    # - search row-wise for available slot with parent less than new-node - insert
+    # - re-shuffle to make tree Complete
     def insert(node)
       return if node.nil?
       puts "Inserting #{node.title}: #{node.rating}"
-      puts "\tBefore: #{root.inspect}"
-
       @count += 1
 
-      parent_node = find_parent(root, node)
-      if parent_node == root
-        root_swap(node)
-      elsif parent_node.parent.is_a?(EmptyNode)
-        parent_node.insert(node)
-      else
-        parent_node.parent.insert(node)
-        swap_up(node) if count > 3
-      end
-      puts "\t After: #{root.inspect}"
+      puts "\tBefore: #{root.inspect}"
 
-      # was it assigned?  parent set?
+      tree_node = find_insert_positon(node)
+      if node.rating < root.rating
+        puts "Swapping..."
+        root_swap(node)
+      else
+        tree_node.insert(node)
+      end
+
+      puts "\t After: #{root.inspect}"
 
       display_tree(root)
       puts "=========="
     end
 
-    def insert_left(parent, node)
-    end
-    def insert_right(parent,node)
-    end
-
-    # existing node with rating less than node's
-    def find_parent(tree_node, node)
-      parent_node = tree_node
-      case tree_node <=> node
-        when -1
-          puts "Less than #{tree_node.title}"
-          if tree_node.left.valid?
-            parent_node = find_parent(tree_node.left, node)
-          end
-        when 1
-          puts "More than #{tree_node.title}"
-          if tree_node.right.valid?
-            parent_node = find_parent(tree_node.right, node)
-          end
-        else
-          puts "Invalid Comparison #{tree_node.title}"
-      end
-      puts "Tree Node's Rating is #{parent_node.rating}"
-      parent_node
-    end
-
-    def root_swap(node)
-      temp = root
-      node.left = temp
-      @root = node
-    end
-
-    def insertp(rnode = nil, node)
-      start_node = rnode.nil? ? root : rnode
-      puts "Inserting #{node.title}: #{node.rating}"
-      @count += 1
+    def find_insert_positon(node)
       row_number = (Math.log2(@count)).floor
       row_max_count = 2 ** row_number
       tree_capacity = 2 ** (row_number + 1 ) - 1
       target_location = row_max_count - (tree_capacity - @count)
-      return nil if node.nil?
 
-      current_location = 0
+      tree_index = 1
+      tree_node = root
+      while tree_node.left.valid?                    # tree < node, do until greater
+        tree_node = case tree_node <=> node
+                      when 1
+                        tree_node.left.valid? ?
+                            tree_node.left  :
+                            break;
+                      when -1
+                        tree_node.right.valid? ?
+                            tree_node.right  :
+                            break
+                      else break
+                    end
+        tree_index += 1                       # tree_index == row_number
+      end
 
-      if target_location <= (row_max_count / 2)
-        # go left
-        if !start_node.left
-          start_node.left = node
-          node.parent = start_node
-          swap_up(node)
-          return
-        else
-          insertp( node)
-        end
+      # either leaf or tree > node
+      puts "TREE-NODE: #{tree_node.inspect}  ==> RowCalc: #{row_number}, Target: #{target_location}, Location: #{tree_index}"
 
+      tree_node
+    end
+
+    def root_swap(node)
+      temp = root
+      if temp.right.valid?     # present
+        node.right = temp.right
+        node.left = temp
+        node.left.parent = node
+        node.right.parent = node
+        temp.right = EmptyNode.new()
       else
-        # go right
-        if !start_node.right
-          start_node.right = node
-          node.parent = root
-          swap_up(node)
-          return
-        else
-          insertp( node)
-        end
+        node.left = temp
+        node.left.parent = node
       end
-
-      display_tree(root)
-      puts "=========="
-    end
-
-    def swap_up(node)
-      parent_node = node.parent
-      # unless pacific rim is nil || pacific rim's rating <= braveheart's rating -> 72 <= 78
-      unless parent_node.nil? || parent_node.rating <= node.rating
-        # Handle the parents
-        grandparent = parent_node.parent
-        parent_node.parent = node
-        node.parent = grandparent
-
-        # Handle the lefts
-        node_left = node.left
-
-        if grandparent.valid?
-          grandparent.left = node
-        else
-          @root = node
-        end
-
-        node.left = parent_node
-        parent_node.left = node_left
-
-        # Hangle the rights
-        node_right = node.right
-
-        if grandparent.valid?
-          grandparent.right = node
-          node.right = parent_node
-        else
-          node.right = parent_node.right # this line is wrong for GP case
-        end
-        parent_node.right = node_right
-      end
-    end
-
-    def delete(root, data)
-      if root.nil? || data.nil?
-        return nil
-      end
-
-      node = find(root,data)
-    end
-
-    # Recursive Depth First Search
-    def find(root, data)
-      if data.nil?
-        return nil
-      end
-
-      if root.title == data
-        return root
-      end
-
-      unless root.left.nil?
-        answer = find(root.left, data)
-        return answer unless answer == nil
-      end
-
-      unless root.right.nil?
-        return find(root.right, data)
-      end
+      @root = node
     end
 
     def display_tree(node=@root)
-      queue = Queue.new
-      queue.enq(node)
-      until queue.empty?
-        value = queue.deq
-        puts "#{value.title}: #{value.rating}" if value.valid?
-        # keep moving the levels in tree by pushing left and right nodes of tree in queue
-        queue.enq(value.left) if value.valid?
-        queue.enq(value.right) if value.valid?
+      node.to_a.each do |item|
+        puts item
       end
     end
+
   end
 
 # root = Node.new("The Matrix", 87)

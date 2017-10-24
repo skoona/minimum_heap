@@ -31,13 +31,13 @@ RSpec.describe Heaps::MinimumHeap, type: Class do
       @tree.insert(node5) #86
       @tree.insert(node6) #90
       @tree.insert(node2) #78
-      puts @tree.root.to_a.inspect
+      @tree.insert(node9) #91
       puts @tree.root.inspect
       expect(@tree.root.rating).to eq 78
       expect(@tree.root.left.rating).to eq 85
       expect(@tree.root.right.rating).to eq 86
-      expect(@tree.root.left.left.rating).to eq 90
-      expect(@tree.root.left.right.rating).to eq 87
+      expect(@tree.root.left.left.rating).to eq 87
+      expect(@tree.root.left.right.rating).to eq 90
     end
 
     it "properly inserts a new node as a right-left child" do

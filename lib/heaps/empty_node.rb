@@ -25,27 +25,29 @@ module Heaps
       false
     end
 
-    def <=>(other)
-      nil
-    end
-
     def insert(*)
       false
-    end
-
-    def valid?
-      false
-    end
-    def to_a
-      []
     end
 
     def include?(*)
       false
     end
 
+    def valid?
+      false
+    end
+
+    def to_a
+      []
+    end
+
     def inspect(*)
       "{}"
     end
-  end
+
+    def <=>(*)
+      nil
+    end
+
+    end
 end
