@@ -5,7 +5,7 @@
 module Heaps
 
   class EmptyNode
-    def rating
+    def value
       -1
     end
 

@@ -33,11 +33,11 @@ RSpec.describe Heaps::MinimumHeap, type: Class do
       @tree.insert(node2) #78
       @tree.insert(node9) #91
       puts @tree.root.inspect
-      expect(@tree.root.rating).to eq 78
-      expect(@tree.root.left.rating).to eq 85
-      expect(@tree.root.right.rating).to eq 86
-      expect(@tree.root.left.left.rating).to eq 87
-      expect(@tree.root.left.right.rating).to eq 90
+      expect(@tree.root.value).to eq 78
+      expect(@tree.root.left.value).to eq 85
+      expect(@tree.root.right.value).to eq 86
+      expect(@tree.root.left.left.value).to eq 87
+      expect(@tree.root.left.right.value).to eq 90
     end
 
     it "properly inserts a new node as a right-left child" do
@@ -46,12 +46,12 @@ RSpec.describe Heaps::MinimumHeap, type: Class do
       @tree.insert( node2) #78
       @tree.insert( node5) #86
       @tree.insert( node11) #98
-      expect(@tree.root.rating).to eq 78
-      expect(@tree.root.left.rating).to eq 86
-      expect(@tree.root.right.rating).to eq 92
-      expect(@tree.root.left.left.rating).to eq 93
-      expect(@tree.root.left.right.rating).to eq 87
-      expect(@tree.root.right.left.rating).to eq 98
+      expect(@tree.root.value).to eq 78
+      expect(@tree.root.left.value).to eq 86
+      expect(@tree.root.right.value).to eq 92
+      expect(@tree.root.left.left.value).to eq 93
+      expect(@tree.root.left.right.value).to eq 87
+      expect(@tree.root.right.left.value).to eq 98
     end
   end
 
@@ -65,7 +65,7 @@ RSpec.describe Heaps::MinimumHeap, type: Class do
       @tree.insert( node4) #85
       @tree.insert( node5) #86
       @tree.insert( node6) #90
-      expect(@tree.find(root, node6.rating).rating).to eq 90
+      expect(@tree.find(root, node6.value).value).to eq 90
     end
 
     it "properly finds a right-left node" do
@@ -74,7 +74,7 @@ RSpec.describe Heaps::MinimumHeap, type: Class do
       @tree.insert( node11) #98
       @tree.insert( node9) #93
       @tree.insert( node8) #92
-      expect(@tree.find(root, node8.rating).rating).to eq 92
+      expect(@tree.find(root, node8.value).value).to eq 92
     end
   end
 
@@ -88,8 +88,8 @@ RSpec.describe Heaps::MinimumHeap, type: Class do
       @tree.insert( node2) #78
       @tree.insert( node4) #85
       @tree.insert( node5) #86
-      @tree.delete(root, node5.rating)
-      expect(@tree.find(root, node5.rating).rating).to be_nil
+      @tree.delete(root, node5.value)
+      expect(@tree.find(root, node5.value).value).to be_nil
     end
 
     it "properly deletes a right-left node" do
@@ -98,8 +98,8 @@ RSpec.describe Heaps::MinimumHeap, type: Class do
       @tree.insert( node2) #78
       @tree.insert( node5) #86
       @tree.insert( node11) #98
-      @tree.delete(root, node11.rating)
-      expect(@tree.find(root, node11.rating).rating).to be_nil
+      @tree.delete(root, node11.value)
+      expect(@tree.find(root, node11.value).value).to be_nil
     end
   end
 
