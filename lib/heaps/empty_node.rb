@@ -1,10 +1,14 @@
 ##
 # File: <root>/lib/heaps/empty_node.rb
+##
 
 # Avoids nil checks
 module Heaps
 
   class EmptyNode
+    def initialize(*)
+    end
+
     def value
       -1
     end

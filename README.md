@@ -176,6 +176,10 @@ condition ```heap property```:
 
 ![Minimal-Heap](https://upload.wikimedia.org/wikipedia/commons/5/5c/Binary-heap.png)
 
+    Description: Example of a complete binary max heap
+        Date	8 December 2010
+        Author	Ermishin
+
 A heap is implemented using an array that is indexed from 1 to N, where N is the number of elements in the heap.
 
 At any time, the heap must satisfy the heap property
@@ -183,7 +187,11 @@ At any time, the heap must satisfy the heap property
         array[n] <= array[2*n]   // parent element <= left child
     and
         array[n] <= array[2*n+1] // parent element <= right child
+![Arry Implementation](https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Heap-as-array.svg/603px-Heap-as-array.svg.png)
 
+    Description: Example of a complete binary max-heap with node keys being integers from 1 to 100 and how it would be stored in an array.
+        Date	30 January 2017
+        Author	Maxiantor
 
 ## Operations
 Ref: https://en.wikipedia.org/wiki/Heap_(data_structure)
