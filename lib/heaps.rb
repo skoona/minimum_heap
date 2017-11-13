@@ -124,12 +124,8 @@ module Heaps
 
       puts "\tBefore: #{root.inspect}"
 
-      tree_node = find_insert_positon(node)
-      if node.value < root.value
-        root_swap(node)
-      else
-        tree_node.parent.insert(node)
-      end
+      result = insert_target(root, node)
+      @root = result if !!result
 
       puts "\t After: #{root.inspect}"
 
@@ -138,6 +134,7 @@ module Heaps
     end
 
     def find_insert_positon(node)
+      # 0 based index
       row_number = (Math.log2(@count)).floor
       row_max_count = 2 ** row_number
       tree_capacity = 2 ** (row_number + 1 ) - 1
@@ -160,6 +157,42 @@ module Heaps
       puts "TREE-NODE: #{tree_node.inspect}  ==> RowCalc: #{row_number}, Target: #{target_location}, Location: #{tree_index}"
 
       tree_node
+    end
+
+    # Return node if @root
+    # Returns nil otherwise
+    def insert_target(start_node, node)
+      # catch root node
+      found = false
+      return node if start_node.nil?
+
+      unless start_node.left or
+          start_node.right or
+            start_node.parent
+        found = true
+        return start_node.insert_node(node)
+      end
+
+      #next row column sibling
+      unless start_node.parent.right
+        found = true
+        return start_node.parent.insert_node(node)
+      end
+
+      #next row column right row peer
+      if start_node.parent.parent.left.left or
+          start_node.parent.parent.left.right
+        found = true
+        return start_node.parent.parent.left.insert_node(node)
+      end
+      if start_node.parent.parent.right.left or
+          start_node.parent.parent.right.right
+        found = true
+        return start_node.parent.parent.right.insert_node(node)
+      end
+
+      insert_target(start_node.parent.parent.left.left, node) unless found
+      nil
     end
 
     def root_swap(node)

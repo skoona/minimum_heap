@@ -42,7 +42,7 @@ module Heaps
       @size = 0
       @root = Heaps::EmptyNode.new
       args.each do|value|
-        push(value) if value[:value].is_a?(Fixnum)
+        push( valid_node(value) )
       end
     end
 
@@ -50,17 +50,34 @@ module Heaps
     # Basic
     ##
     def push(value)
-      node = Heaps::Node.new(value[:title], value[:value])
-      @root = node if @size == 0
+      # row_number = (Math.log2(@count)).floor
+      # row_max_count = 2 ** row_number
+      # tree_capacity = 2 ** (row_number + 1 ) - 1
+      # target_location = row_max_count - (tree_capacity - @count)
+
+      node = valid_node(value)
+      if @size == 0
+        @root = node
+        @size += 1
+        return nil
+      end
       @size += 1
+      newest_node = @root.insert_node(node)
+      nil
     end
     alias_method :<<, :push
     alias_method :insert,:push
 
     def pop
+      remove(@root)
+    end
+
+    def peek
+      @root
     end
 
     def delete(value)
+      node = valid_node(value)
     end
 
     ##
@@ -72,19 +89,29 @@ module Heaps
 
     # new_heap = this + other
     def merge(other_heap)
+      return nil unless other_heap.is_a?(self.class)
+      combined = (self.to_a + other_heap.to_a).flatten.uniq
+      self.class.heapify(combined)
     end
 
     # this_heap += other
     def merge!(other_heap)
+      return nil unless other_heap.is_a?(self.class)
+      other_heap.to_a.each do|value|
+        push( valid_node(value) )
+      end
+      self
     end
 
     ##
     # Inspection
     ##
     def include?(value)
+      node = valid_node(value)
     end
 
     def size
+      @size
     end
     alias_method :length, :size
 
@@ -95,6 +122,7 @@ module Heaps
     def inspect
       @root.inspect
     end
+    alias_method :to_s, :inspect
 
     def to_a
       @root.to_a
@@ -111,6 +139,23 @@ module Heaps
     ##
     # Internal
     ##
+
+    # Consider
+    # parent.value, left.value, right.value, and this.value
+    # returns this_node
+    def insert_node(this_node, starting_node=nil)
+      #  swap:  this < parent
+      #  down:  this >= parent
+      #  LEFT:  this > left && this < right
+      # RIGHT:  this > left && this > right
+    end
+
+    def valid_node(input_value)
+      input_value.is_a?(Hash) ?
+          Heaps::Node.new(input_value[:title], input_value[:value]) :
+          input_value
+    end
+
     def remove(node)
       size -= 1
     end

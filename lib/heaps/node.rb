@@ -16,30 +16,36 @@ module Heaps
       @parent = EmptyNode.new
     end
 
+    def swap_contents(node)
+      old = {title: title, value: value}
+      self.title = node.title
+      self.value = node.value
+      node.title = old[:title]
+      node.value = old[:value]
+      nil
+    end
+
     def valid?
       true
     end
 
-    def insert(other)
-      case self <=> other
-        when -1 then insert_left(other)
-        when 1 then insert_right(other)
-        else false # the value is already present
-      end
+    def insert_node(node)
+      puts "#{__method__}(#{node.value}) Inserted #{left ? 'Right' : 'Left'} ..."
+      left ? insert_right(node) : insert_left(node)
     end
 
-    def include?(value)
-      case value.class
+    def include?(this_value)
+      case this_value.class
         when String
-          case title <=> value
-            when 1 then left.include?(value)
-            when -1 then right.include?(value)
+          case title <=> this_value
+            when 1 then left.include?(this_value)
+            when -1 then right.include?(this_value)
             when 0 then true # the current node is equal to the value
           end
         else
-          case value <=> value
-            when 1 then left.include?(value)
-            when -1 then right.include?(value)
+          case value <=> this_value
+            when 1 then left.include?(this_value)
+            when -1 then right.include?(this_value)
             when 0 then true # the current node is equal to the value
           end
       end
@@ -51,7 +57,7 @@ module Heaps
     end
 
     def to_a
-      left.to_a + ["#{title}: #{value}"] + right.to_a
+      left.to_a + [{title: self.title.dup, value: self.value.dup}] + right.to_a
     end
 
     def <=>(other)
@@ -69,13 +75,13 @@ module Heaps
     private
 
     def insert_left(node)
-      puts "#{__method__}..."
-      left.insert(node) || ( self.left = node; node.parent = self )
+      puts "#{__method__}(#{node.value})..."
+      self.left = node; node.parent = self
     end
 
     def insert_right(node)
-      puts "#{__method__}..."
-      right.insert(node) || ( self.right = node; node.parent = self )
+      puts "#{__method__}(#{node.value})..."
+      self.right = node; node.parent = self
     end
 
     def swap_up(node)
