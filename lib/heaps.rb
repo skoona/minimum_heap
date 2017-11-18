@@ -121,14 +121,14 @@ module Heaps
     def push(user_data)
       node = valid_node( user_data)
       if !root.valid? and @size == 1
-        puts "#{__method__} Insert Root, R/C => #{insert_positions}"
         @root = node
+        puts "#{__method__} Inserted at R/C/mR/cT => #{insert_positions}, Root.Node => #{node.to_s}, Node.Parent => #{node.parent.to_s}"
         return nil
       else
         @size += 1
-        puts "#{__method__} Insert at R/C => #{insert_positions}"
       end
-      self.send :insert_node, node
+      insert_node( node)
+      puts "#{__method__} Inserted at R/C/mR/cT => #{insert_positions}, Node => #{node.to_s}, Node.Parent => #{node.parent.to_s}"
       nil
     end
     alias_method :<<, :push
@@ -240,39 +240,33 @@ module Heaps
 
       prow, pcol, pmax, pcap = insert_positions
 
-      puts "Row: #{row}, TargetRow: #{prow}"
       while prow > row  do                             # position to target row
         nav_node = root if nav_node.nil?
-        puts "\tRow: #{row}, TargetRow: #{prow}"
         nav_node = nav_node.left
         row += 1
       end
-
       nav_node = root if nav_node.nil?
-      puts "** Row: #{row}, TargetRow: #{prow} StartNode: #{nav_node.to_s}"
 
       row_wise_insert(nav_node, this_node)
+      root.move_down(this_node)
     end
     
     # Row Wise Insertions
     def row_wise_insert(snode, new_node)
       node = snode.insert_node( new_node )
 
-      if node == new_node
-        puts "#{__method__} Inserted: #{node.to_s}"
-      else
+      if node != new_node
         count = 0
-        while node.parent.right == node do # walk up
+        while node.parent.right == node do     # walk up to find path to right column
           node = node.parent
           count += 1
         end
-        node = node.parent.right
-        puts "\t#{__method__} Bridging: #{node.to_s}"
-        while count > 0 && node.left.valid? do # walk down
+        node = node.parent.right               # move into right column
+        while count > 0 && node.left.valid? do # walk down to row
           node = node.left
           count -= 1
         end
-        puts "** #{__method__} Bridging: #{node.to_s}"
+
         row_wise_insert( node , new_node )
       end
 

@@ -71,6 +71,7 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
       tree.push(node15)
       exp_out = '{70:{72:{80:{91:{102:{}|{}}|{}}|{92:{}|{}}}|{85:{93:{}|{}}|{94:{}|{}}}}|{78:{86:{98:{}|{}}|{99:{}|{}}}|{90:{100:{}|{}}|{101:{}|{}}}}}'
       expect(tree.inspect).to eq(exp_out)
+      puts tree.inspect
     end
 
     it "properly pushs a new node as a right-left child" do
@@ -123,5 +124,13 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
 
   end
 
+  context "Heap Property Operations" do
+    it "#move_up retores heap property for nodes added." do
+      heap_prop = described_class.new(node1, node4, node5, node11, root, node3)
+      puts heap_prop.inspect
+      expect(heap_prop.peek[:value]).to eq(70)
+      puts heap_prop.to_a
+    end
+  end
 
 end

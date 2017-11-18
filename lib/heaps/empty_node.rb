@@ -21,6 +21,14 @@ module Heaps
       {title: title, value: value}
     end
 
+    def data=(*)
+      nil
+    end
+
+    def to_s
+      data
+    end
+
     def left(*)
       false
     end
