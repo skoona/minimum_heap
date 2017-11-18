@@ -35,14 +35,6 @@
 #
 #   [Minimal-Heap](https://upload.wikimedia.org/wikipedia/commons/5/5c/Binary-heap.png)
 #
-# A heap is implemented using an array that is indexed from 1 to N, where N is the number of elements in the heap.
-#
-#    At any time, the heap must satisfy the heap property
-#
-#        array[n] <= array[2*n]   // parent element <= left child
-#    and
-#        array[n] <= array[2*n+1] // parent element <= right child
-
 # Operations[edit]
 # The common operations involving heaps are:
 #
@@ -90,36 +82,6 @@
 #   sift-down:
 #     move a node down in the tree, similar to sift-up; used to restore heap condition after deletion or replacement.
 ##
-# tree.root
-# => {72:{87:{}|{}}|{78:{}|{80:{}|{}}}}
-# tree.root.to_a
-# => => ["The Matrix: 87", "Pacific Rim: 72", "Braveheart: 78", "Star Wars: Return of the Jedi: 80"]
-#
-#               Actual                   Desired
-#                  72                       72
-#                /   \                    /   \
-#              87    78                 78    80
-#                   /  \               /  \
-#                      80             87
-##
-# A heap is an efficient semi-ordered data structure for storing a collection of orderable data. A min-heap
-# supports two operations:
-#
-#    INSERT(heap, element)
-#    element REMOVE_MIN(heap)
-#
-# Although different types of heaps exist. The term binary heap and heap are interchangeable in
-# most cases. A heap can be thought of as a tree with parent and child. The main difference
-# between a heap and a binary tree is the heap property.  In order for a data structure to be
-# considered a heap, it must satisfy the following condition (heap property):
-#
-#    If A and B are elements in the heap and B is a child of A, then key(A) ≤ key(B).
-#    (This property applies for a min-heap. A max heap would have the comparison reversed).
-#     What this tells us is that the minimum key will always remain at the top and greater
-#     values will be below it. Due to this fact, heaps are used to implement priority queues
-#     which allows quick access to the item with the most priority. Here's an example of a min-heap:
-#
-#   [Minimal-Heap](https://upload.wikimedia.org/wikipedia/commons/5/5c/Binary-heap.png)
 
 
 
@@ -187,24 +149,38 @@ module Heaps
       node = valid_node(user_data)
     end
 
+    # severs the tree after root node, expecting GC to cleanup
+    def clear!
+      root.left.parent ? (root.left.parent = nil) : nil
+      root.right.parent ? (root.right.parent = nil) : nil
+      root.left = nil
+      root.right = nil
+      root.parent = nil
+      @root = nil
+      @size = 0
+      nil
+    end
+
     ##
     # Creation
     ##
     def self.heapify(*user_datas_ary)
-      new(user_datas_ary)
+      new(*user_datas_ary)
     end
 
     # new_heap = this + other
     def merge(other_heap)
       return nil unless other_heap.is_a?(self.class)
       combined = (self.to_a + other_heap.to_a).flatten.uniq
+      other_heap.clear!
+      self.clear!
       self.class.heapify(combined)
     end
 
     # this_heap += other
     def merge!(other_heap)
       return nil unless other_heap.is_a?(self.class)
-      other_heap.to_a.each do|user_data|
+      other_heap.to_a.flatten.each do |user_data|
         push( valid_node(user_data) )
       end
       self
@@ -257,20 +233,15 @@ module Heaps
       [row_number, target_location, row_max_count, tree_capacity]
     end
 
-    # Consider
-    # parent.value, left.value, right.value, and this.value
-    # returns this_node
+    # returns this_node on sucess
     def insert_node(this_node)
       row = 1
-      col = 1
       nav_node = nil
 
       prow, pcol, pmax, pcap = insert_positions
-      lh_rh = (pcol > (pmax / 2))                      # True if row/col target is on right hand of tree
-      tcol = ((pmax / 2) - (pcol / 2.0)).ceil          # target col, one row short of pRrow
 
       puts "Row: #{row}, TargetRow: #{prow}"
-      while prow > row  do
+      while prow > row  do                             # position to target row
         nav_node = root if nav_node.nil?
         puts "\tRow: #{row}, TargetRow: #{prow}"
         nav_node = nav_node.left
@@ -280,18 +251,15 @@ module Heaps
       nav_node = root if nav_node.nil?
       puts "** Row: #{row}, TargetRow: #{prow} StartNode: #{nav_node.to_s}"
 
-      navigation_insert(nav_node, this_node)
+      row_wise_insert(nav_node, this_node)
     end
-
-    def navigation_insert(snode, new_node)
+    
+    # Row Wise Insertions
+    def row_wise_insert(snode, new_node)
       node = snode.insert_node( new_node )
 
       if node == new_node
         puts "#{__method__} Inserted: #{node.to_s}"
-      # elsif !node.parent.right
-      #   node = node.parent
-      #   puts "#{__method__} Parent: #{node.to_s}"
-      #   navigation_insert( node , new_node )
       else
         count = 0
         while node.parent.right == node do # walk up
@@ -305,7 +273,7 @@ module Heaps
           count -= 1
         end
         puts "** #{__method__} Bridging: #{node.to_s}"
-        navigation_insert( node , new_node )
+        row_wise_insert( node , new_node )
       end
 
       node
@@ -343,62 +311,62 @@ end
 # push Insert at R/C => [1, 1, 2, 3]
 # Row: 1, TargetRow: 1
 # ** Row: 1, TargetRow: 1 StartNode: {:label=>"The Matrix", :value=>70}
-# navigation_insert Inserted: {:label=>"Pacific Rim", :value=>72}
+# row_wise_insert Inserted: {:label=>"Pacific Rim", :value=>72}
 # push Insert at R/C => [1, 2, 2, 3]
 # Row: 1, TargetRow: 1
 # ** Row: 1, TargetRow: 1 StartNode: {:label=>"The Matrix", :value=>70}
-# navigation_insert Inserted: {:label=>"Braveheart", :value=>78}
+# row_wise_insert Inserted: {:label=>"Braveheart", :value=>78}
 # push Insert at R/C => [2, 1, 4, 7]
 # Row: 1, TargetRow: 2
 #   Row: 1, TargetRow: 2
 # ** Row: 2, TargetRow: 2 StartNode: {:label=>"Pacific Rim", :value=>72}
-# navigation_insert Inserted: {:label=>"Star Wars: Return of the Jedi", :value=>80}
+# row_wise_insert Inserted: {:label=>"Star Wars: Return of the Jedi", :value=>80}
 # push Insert at R/C => [2, 2, 4, 7]
 # Row: 1, TargetRow: 2
 #   Row: 1, TargetRow: 2
 # ** Row: 2, TargetRow: 2 StartNode: {:label=>"Pacific Rim", :value=>72}
-# navigation_insert Inserted: {:label=>"Donnie Darko", :value=>85}
+# row_wise_insert Inserted: {:label=>"Donnie Darko", :value=>85}
 # push Insert at R/C => [2, 3, 4, 7]
 # Row: 1, TargetRow: 2
 #   Row: 1, TargetRow: 2
 # ** Row: 2, TargetRow: 2 StartNode: {:label=>"Pacific Rim", :value=>72}
-#   navigation_insert Bridging: {:label=>"Braveheart", :value=>78}
-# ** navigation_insert Bridging: {:label=>"Braveheart", :value=>78}
-# navigation_insert Inserted: {:label=>"Inception", :value=>86}
+#   row_wise_insert Bridging: {:label=>"Braveheart", :value=>78}
+# ** row_wise_insert Bridging: {:label=>"Braveheart", :value=>78}
+# row_wise_insert Inserted: {:label=>"Inception", :value=>86}
 # push Insert at R/C => [2, 4, 4, 7]
 # Row: 1, TargetRow: 2
 #   Row: 1, TargetRow: 2
 # ** Row: 2, TargetRow: 2 StartNode: {:label=>"Pacific Rim", :value=>72}
-#   navigation_insert Bridging: {:label=>"Braveheart", :value=>78}
-# ** navigation_insert Bridging: {:label=>"Braveheart", :value=>78}
-# navigation_insert Inserted: {:label=>"District 9", :value=>90}
+#   row_wise_insert Bridging: {:label=>"Braveheart", :value=>78}
+# ** row_wise_insert Bridging: {:label=>"Braveheart", :value=>78}
+# row_wise_insert Inserted: {:label=>"District 9", :value=>90}
 # push Insert at R/C => [3, 1, 8, 15]
 # Row: 1, TargetRow: 3
 #   Row: 1, TargetRow: 3
 #   Row: 2, TargetRow: 3
 # ** Row: 3, TargetRow: 3 StartNode: {:label=>"Star Wars: Return of the Jedi", :value=>80}
-# navigation_insert Inserted: {:label=>"The Shawshank Redemption", :value=>91}
+# row_wise_insert Inserted: {:label=>"The Shawshank Redemption", :value=>91}
 # push Insert at R/C => [3, 2, 8, 15]
 # Row: 1, TargetRow: 3
 #   Row: 1, TargetRow: 3
 #   Row: 2, TargetRow: 3
 # ** Row: 3, TargetRow: 3 StartNode: {:label=>"Star Wars: Return of the Jedi", :value=>80}
-# navigation_insert Inserted: {:label=>"The Martian", :value=>92}
+# row_wise_insert Inserted: {:label=>"The Martian", :value=>92}
 # push Insert at R/C => [3, 3, 8, 15]
 # Row: 1, TargetRow: 3
 #   Row: 1, TargetRow: 3
 #   Row: 2, TargetRow: 3
 # ** Row: 3, TargetRow: 3 StartNode: {:label=>"Star Wars: Return of the Jedi", :value=>80}
-#   navigation_insert Bridging: {:label=>"Donnie Darko", :value=>85}
-# ** navigation_insert Bridging: {:label=>"Donnie Darko", :value=>85}
-# navigation_insert Inserted: {:label=>"Star Wars: A New Hope", :value=>93}
+#   row_wise_insert Bridging: {:label=>"Donnie Darko", :value=>85}
+# ** row_wise_insert Bridging: {:label=>"Donnie Darko", :value=>85}
+# row_wise_insert Inserted: {:label=>"Star Wars: A New Hope", :value=>93}
 # push Insert at R/C => [3, 4, 8, 15]
 # Row: 1, TargetRow: 3
 #   Row: 1, TargetRow: 3
 #   Row: 2, TargetRow: 3
 # ** Row: 3, TargetRow: 3 StartNode: {:label=>"Star Wars: Return of the Jedi", :value=>80}
-#   navigation_insert Bridging: {:label=>"Donnie Darko", :value=>85}
-# ** navigation_insert Bridging: {:label=>"Donnie Darko", :value=>85}
-# navigation_insert Inserted: {:label=>"Star Wars: The Empire Strikes Back", :value=>94}
+#   row_wise_insert Bridging: {:label=>"Donnie Darko", :value=>85}
+# ** row_wise_insert Bridging: {:label=>"Donnie Darko", :value=>85}
+# row_wise_insert Inserted: {:label=>"Star Wars: The Empire Strikes Back", :value=>94}
 #
 # {70:{72:{80:{91:{}|{}}|{92:{}|{}}}|{85:{93:{}|{}}|{94:{}|{}}}}|{78:{86:{}|{}}|{90:{}|{}}}}

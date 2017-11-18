@@ -38,25 +38,22 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
 
     it "initializes with param list of values" do
       expect(described_class.new(root, node1, node2, node3, node4)).to be
-      puts @tree.inspect
     end
 
     it "initializes with array of values" do
       ary_values = [root, node1, node2, node3, node4]
       expect(described_class.new(ary_values)).to be
-      puts @tree.inspect
     end
 
     it "initializes with array of hash values" do
       hash_ary = [root, node1, node2, node3, node4].map {|x| {label: x.first, value: x.last} }
       expect(described_class.new(hash_ary)).to be
-      puts @tree.inspect
     end
   end
 
-  context "#push(data)" do
+  context "Inserting User Data " do
 
-    it "properly pushs a new node as a left-right child" do
+    it "#push maintains a completed and balanced tree." do
       tree.push(node1)
       tree.push(node2)
       tree.push(node3)
@@ -72,8 +69,8 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
       tree.push(node13)
       tree.push(node14)
       tree.push(node15)
-      puts tree.inspect
-      expect(tree.peek[:value]).to eq 70
+      exp_out = '{70:{72:{80:{91:{102:{}|{}}|{}}|{92:{}|{}}}|{85:{93:{}|{}}|{94:{}|{}}}}|{78:{86:{98:{}|{}}|{99:{}|{}}}|{90:{100:{}|{}}|{101:{}|{}}}}}'
+      expect(tree.inspect).to eq(exp_out)
     end
 
     it "properly pushs a new node as a right-left child" do
@@ -82,8 +79,49 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
       tree.push( node2) #78
       tree.push( node5) #86
       tree.push( node11) #98
-      puts tree.inspect
+      puts tree.to_a
     end
   end
+
+  context "Creation api" do
+    it "#merge returns a new heap composed of this heap and other. " do
+      hp1 = described_class.new([root, node1, node2, node3, node4])
+      hp2 = described_class.new(node4, node5, node6, node7, node8)
+      hp1_size = hp1.size
+      hp2_size = hp2.size
+      hp_merged = hp1.merge(hp2)
+      expect(hp_merged).to be
+      expect(hp_merged).to_not equal(hp1)
+      expect(hp_merged.size).to eq(hp2_size + hp1_size - 1)
+    end
+
+    it "#merge! returns this heap after consuming other. " do
+      hp1 = described_class.new([root, node1, node2, node3, node4])
+      hp2 = described_class.new(node4, node5, node6, node7, node8)
+      hp1_size = hp1.size
+      hp2_size = hp2.size
+      hp_merged = hp1.merge!(hp2)
+      expect(hp_merged).to be
+      expect(hp_merged).to equal(hp1)
+      expect(hp_merged.size).to eq(hp2_size + hp1_size)
+    end
+
+    it "#merge destroys this heap and other after creating a new combined heap. " do
+      hp1 = described_class.new(root, node1)
+      hp2 = described_class.new(node4, node5)
+      hp1_size = hp1.size
+      hp2_size = hp2.size
+      hp_merged = hp1.merge(hp2)
+      expect(hp_merged).to be
+      expect(hp_merged).to_not equal(hp1)
+      expect(hp_merged.size).to eq(hp2_size + hp1_size)
+      expect(hp1.size).to eq(0)
+      expect(hp2.size).to eq(0)
+      expect(hp1.root).to be_nil
+      expect(hp2.root).to be_nil
+    end
+
+  end
+
 
 end

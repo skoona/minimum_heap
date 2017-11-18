@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    heaps (0.1.0)
+    heaps (0.1.1)
 
 GEM
   remote: https://rubygems.org/
@@ -38,4 +38,4 @@ DEPENDENCIES
   rspec (~> 3.5.0)
 
 BUNDLED WITH
-   1.14.6
+   1.15.3

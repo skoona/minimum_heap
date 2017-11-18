@@ -60,7 +60,7 @@ module Heaps
     end
 
     def to_a
-      left.to_a + [{label: self.label.dup, value: self.value.dup}] + right.to_a
+      left.to_a + [self.data] + right.to_a
     end
 
     def <=>(other)
