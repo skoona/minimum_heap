@@ -5,24 +5,15 @@
 module Heaps
 
   class  Node
-    attr_reader   :title, :value
-    attr_accessor :left,  :right, :parent
+    attr_accessor :left, :right, :parent, :label, :value
 
-    def initialize(title, value)
-      @title  = title
-      @value = value
-      @left   = EmptyNode.new
-      @right  = EmptyNode.new
-      @parent = EmptyNode.new
-    end
-
-    def swap_contents(node)
-      old = {title: title, value: value}
-      self.title = node.title
-      self.value = node.value
-      node.title = old[:title]
-      node.value = old[:value]
-      nil
+    def initialize(text_label, data_value)
+      @label  = text_label
+      @value  = data_value
+      tmp = EmptyNode.new
+      @left   = tmp
+      @right  = tmp
+      @parent = tmp
     end
 
     def valid?
@@ -30,34 +21,46 @@ module Heaps
     end
 
     def insert_node(node)
-      puts "#{__method__}(#{node.value}) Inserted #{left ? 'Right' : 'Left'} ..."
-      left ? insert_right(node) : insert_left(node)
-    end
-
-    def include?(this_value)
-      case this_value.class
-        when String
-          case title <=> this_value
-            when 1 then left.include?(this_value)
-            when -1 then right.include?(this_value)
-            when 0 then true # the current node is equal to the value
-          end
+      if left.valid?
+        if right.valid?
+          self
         else
-          case value <=> this_value
-            when 1 then left.include?(this_value)
-            when -1 then right.include?(this_value)
-            when 0 then true # the current node is equal to the value
-          end
+          insert_right(node)
+        end
+      else
+        insert_left(node)
       end
     end
 
+    def include?(other_node)
+      self.label == other_node.label &&
+          self.value == other_node.value
+    end
+
+    def swap_contents(node)
+      puts "#{__method__} Replace: #{self.data} with #{node.data}"
+      old = self.data
+      self.label = node.label
+      self.value = node.value
+      node.label = old[:label]
+      node.value = old[:value]
+      nil
+    end
+
+    def data
+      {label: label.dup, value: value.dup}
+    end
+
+    def to_s
+      data
+    end
 
     def inspect
       "{#{value}:#{left.inspect}|#{right.inspect}}"
     end
 
     def to_a
-      left.to_a + [{title: self.title.dup, value: self.value.dup}] + right.to_a
+      left.to_a + [{label: self.label.dup, value: self.value.dup}] + right.to_a
     end
 
     def <=>(other)
@@ -72,70 +75,30 @@ module Heaps
       end
     end
 
+    def ==(other)
+      self.class === other and
+          other.value == self.value and
+          other.label == self.label
+    end
+    alias_method  :eql?, :==
+
+    def hash
+      self.label.hash ^ self.value.hash # XOR
+    end
+
     private
 
     def insert_left(node)
-      puts "#{__method__}(#{node.value})..."
-      self.left = node; node.parent = self
+      self.left = node
+      node.parent = self
+      node
     end
 
     def insert_right(node)
-      puts "#{__method__}(#{node.value})..."
-      self.right = node; node.parent = self
+      self.right = node
+      node.parent = self
+      node
     end
-
-    def swap_up(node)
-      puts "#{__method__}..."
-      return if node.value < node.parent.value
-
-      node_parent = node.parent
-      node_parent_left = node_parent.left
-      node_parent_right = node_parent.right
-
-      node_parent.parent = node
-      node_parent.left = node.left
-      node_parent.right = node.right
-
-      node.parent = node_parent
-      node.left = node_parent_left unless node_parent_left == node
-      node.right = node_parent_right unless node_parent_right == node
-    end
-
-    def node_swap_up(node)
-      puts "#{__method__}..."
-      parent_node = node.parent
-      # unless pacific rim is nil || pacific rim's rating <= braveheart's rating -> 72 <= 78
-      unless !parent_node.valid? || parent_node.value <= node.value
-        # Handle the parents
-        grandparent = parent_node.parent
-        parent_node.parent = node
-        node.parent = grandparent
-
-        # Handle the lefts
-        node_left = node.left
-
-        unless !grandparent.valid?
-          grandparent.left = node
-        else
-          @root = node
-        end
-
-        node.left = parent_node
-        parent_node.left = node_left
-
-        # Hangle the rights
-        node_right = node.right
-
-        unless !grandparent.valid?
-          grandparent.right = node
-          node.right = parent_node
-        else
-          node.right = parent_node.right # this line is wrong for GP case
-        end
-        parent_node.right = node_right
-      end
-    end
-
 
   end
 end

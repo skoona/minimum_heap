@@ -17,6 +17,10 @@ module Heaps
       self.class.name
     end
 
+    def data
+      {title: title, value: value}
+    end
+
     def left(*)
       false
     end
@@ -29,7 +33,7 @@ module Heaps
       false
     end
 
-    def insert(*)
+    def insert_node(*)
       false
     end
 

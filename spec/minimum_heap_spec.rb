@@ -1,126 +1,89 @@
 
 require "spec_helper"
 
-RSpec.describe Heaps::MinimumHeap, type: Class do
-  let (:root) { Heaps::Node.new("The Matrix", 87) }
+RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array storage" do
+  let (:root) { ["The Matrix", 70] }
 
-  let (:tree) { Heaps::MinimumHeap.new(root) }
-  let (:node1) { Heaps::Node.new("Pacific Rim", 72) }
-  let (:node2) { Heaps::Node.new("Braveheart", 78) }
-  let (:node3) { Heaps::Node.new("Star Wars: Return of the Jedi", 80) }
-  let (:node4) { Heaps::Node.new("Donnie Darko", 85) }
-  let (:node5) { Heaps::Node.new("Inception", 86) }
-  let (:node6) { Heaps::Node.new("District 9", 90) }
-  let (:node7) { Heaps::Node.new("The Shawshank Redemption", 91) }
-  let (:node8) { Heaps::Node.new("The Martian", 92) }
-  let (:node9) { Heaps::Node.new("Star Wars: A New Hope", 93) }
-  let (:node10) { Heaps::Node.new("Star Wars: The Empire Strikes Back", 94) }
-  let (:node11) { Heaps::Node.new("Mad Max 2: The Road Warrior", 98) }
+  let (:node1) { ["Pacific Rim", 72] }
+  let (:node2) { ["Braveheart", 78] }
+  let (:node3) { ["Star Wars: Return of the Jedi", 80] }
+  let (:node4) { ["Donnie Darko", 85] }
+  let (:node5) { ["Inception", 86] }
+  let (:node6) { ["District 9", 90] }
+  let (:node7) { ["The Shawshank Redemption", 91] }
+  let (:node8) { ["The Martian", 92] }
+  let (:node9) { ["Star Wars: A New Hope", 93] }
+  let (:node10) { ["Star Wars: The Empire Strikes Back", 94] }
+  let (:node11) { ["Mad Max 2: The Road Warrior", 98] }
 
-  it "has a version number" do
-    expect(Heaps::VERSION).not_to be nil
-  end
+  let (:node12) { ["Star Trek: Star Trek", 99] }
+  let (:node13) { ["Star Trek: Voyager", 100] }
+  let (:node14) { ["Star Trek: Deep Space 9", 101] }
+  let (:node15) { ["Star Trek: Next Generation", 102] }
 
-  context "#insert(data)" do
-    before :each do
-      @tree = Heaps::MinimumHeap.new(root)
-    end
-    
-    it "properly inserts a new node as a left-right child" do
-      @tree.insert(node4) #85
-      @tree.insert(node5) #86
-      @tree.insert(node6) #90
-      @tree.insert(node2) #78
-      @tree.insert(node9) #91
-      puts @tree.root.inspect
-      expect(@tree.root.value).to eq 78
-      expect(@tree.root.left.value).to eq 85
-      expect(@tree.root.right.value).to eq 86
-      expect(@tree.root.left.left.value).to eq 87
-      expect(@tree.root.left.right.value).to eq 90
+  let (:tree) { described_class.new(root) }
+
+  context "Initialization " do
+    it "has a version number" do
+      expect(Heaps::VERSION).not_to be nil
     end
 
-    it "properly inserts a new node as a right-left child" do
-      @tree.insert( node9) #93
-      @tree.insert( node8) #92
-      @tree.insert( node2) #78
-      @tree.insert( node5) #86
-      @tree.insert( node11) #98
-      expect(@tree.root.value).to eq 78
-      expect(@tree.root.left.value).to eq 86
-      expect(@tree.root.right.value).to eq 92
-      expect(@tree.root.left.left.value).to eq 93
-      expect(@tree.root.left.right.value).to eq 87
-      expect(@tree.root.right.left.value).to eq 98
-    end
-  end
-
-  context "#find(data)" do
-    before :each do
-      @tree = Heaps::MinimumHeap.new(root)
+    it "initializes without a root value" do
+      expect(described_class.new).to be
     end
 
-    it "properly finds a left-right node" do
-      @tree.insert( node2) #78
-      @tree.insert( node4) #85
-      @tree.insert( node5) #86
-      @tree.insert( node6) #90
-      expect(@tree.find(root, node6.value).value).to eq 90
+    it "initializes with a root values" do
+      expect(described_class.new(root)).to be
     end
 
-    it "properly finds a right-left node" do
-      @tree.insert( node2) #78
-      @tree.insert( node5) #86
-      @tree.insert( node11) #98
-      @tree.insert( node9) #93
-      @tree.insert( node8) #92
-      expect(@tree.find(root, node8.value).value).to eq 92
+    it "initializes with param list of values" do
+      expect(described_class.new(root, node1, node2, node3, node4)).to be
+      puts @tree.inspect
+    end
+
+    it "initializes with array of values" do
+      ary_values = [root, node1, node2, node3, node4]
+      expect(described_class.new(ary_values)).to be
+      puts @tree.inspect
+    end
+
+    it "initializes with array of hash values" do
+      hash_ary = [root, node1, node2, node3, node4].map {|x| {label: x.first, value: x.last} }
+      expect(described_class.new(hash_ary)).to be
+      puts @tree.inspect
     end
   end
 
-  context "#delete(data)" do
-    before :each do
-      @tree = Heaps::MinimumHeap.new(root)
+  context "#push(data)" do
+
+    it "properly pushs a new node as a left-right child" do
+      tree.push(node1)
+      tree.push(node2)
+      tree.push(node3)
+      tree.push(node4)
+      tree.push(node5)
+      tree.push(node6)
+      tree.push(node7)
+      tree.push(node8)
+      tree.push(node9)
+      tree.push(node10)
+      tree.push(node11)
+      tree.push(node12)
+      tree.push(node13)
+      tree.push(node14)
+      tree.push(node15)
+      puts tree.inspect
+      expect(tree.peek[:value]).to eq 70
     end
 
-    it "properly deletes a left-right node" do
-      @tree.insert( node6) #90
-      @tree.insert( node2) #78
-      @tree.insert( node4) #85
-      @tree.insert( node5) #86
-      @tree.delete(root, node5.value)
-      expect(@tree.find(root, node5.value).value).to be_nil
-    end
-
-    it "properly deletes a right-left node" do
-      @tree.insert( node9) #93
-      @tree.insert( node8) #92
-      @tree.insert( node2) #78
-      @tree.insert( node5) #86
-      @tree.insert( node11) #98
-      @tree.delete(root, node11.value)
-      expect(@tree.find(root, node11.value).value).to be_nil
+    it "properly pushs a new node as a right-left child" do
+      tree.push( node9) #93
+      tree.push( node8) #92
+      tree.push( node2) #78
+      tree.push( node5) #86
+      tree.push( node11) #98
+      puts tree.inspect
     end
   end
 
-  context "#display_tree" do
-    before :each do
-      @tree = Heaps::MinimumHeap.new(root)
-    end
-
-    specify {
-      expected_output = "Pacific Rim: 72\nBraveheart: 78\nStar Wars: Return of the Jedi: 80\nThe Matrix: 87\nDistrict 9: 90\nStar Wars: The Empire Strikes Back: 94\nInception: 86\nStar Wars: A New Hope: 93\nThe Shawshank Redemption: 91\nThe Martian: 92\nMad Max 2: The Road Warrior: 98\n"
-      @tree.insert( node9) #93
-      @tree.insert( node10) #94
-      @tree.insert( node3) #80
-      @tree.insert( node8) #92
-      @tree.insert( node1) #72
-      @tree.insert( node5) #86
-      @tree.insert( node2) #78
-      @tree.insert( node7) #91
-      @tree.insert( node6) #90
-      @tree.insert( node11) #98
-      expect { @tree.display_tree }.to output(expected_output).to_stdout
-    }
-  end
 end
