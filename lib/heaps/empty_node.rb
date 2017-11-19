@@ -13,12 +13,12 @@ module Heaps
       -1
     end
 
-    def title
+    def label
       self.class.name
     end
 
     def data
-      {title: title, value: value}
+      {label: label, value: value}
     end
 
     def data=(*)

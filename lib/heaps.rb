@@ -290,6 +290,8 @@ module Heaps
     def maintain_heap_property(node)
       return node unless node.valid? and node.parent.valid?
 
+      node = balance_subtree(node)
+
       eval_node = node.parent
       while eval_node.valid? do
         if (eval_node <=> node) > 0
