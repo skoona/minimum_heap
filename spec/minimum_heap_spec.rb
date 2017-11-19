@@ -125,7 +125,7 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
   end
 
   context "Heap Property Operations" do
-    it "#move_up retores heap property for nodes added." do
+    it "#maintain_heap_property restores heap property for nodes added." do
       heap_prop = described_class.new(node3)
       puts heap_prop.inspect
 

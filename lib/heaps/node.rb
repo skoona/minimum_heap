@@ -82,31 +82,6 @@ module Heaps
       self.label.hash ^ self.value.hash # XOR
     end
 
-    def move_down(node)
-      nres = nil
-      return nil unless node.valid?
-
-      if (self <=> node) > 0         # Self IS-MORE than node:
-        nres = swap_contents(node)
-        if left.valid?
-          nres = left.move_down(nres)
-        end
-        if right.valid?
-          nres = right.move_down(nres)
-        end
-      elsif (self <=> node) < 0     # Self IS-LESS than node:
-        if left.valid?
-          nres = left.move_down(node)
-        end
-        if right.valid? && nres == left
-          nres = right.move_down(nres)
-        elsif right.valid? && nres != left
-          nres = right.move_down(node)
-        end
-      end
-      nres || node
-    end
-
     def swap_contents(node)
       old = self.data
       self.data = node.data
