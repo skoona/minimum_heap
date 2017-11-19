@@ -127,7 +127,7 @@ module Heaps
       else
         @size += 1
       end
-      insert_node( node)
+      node = insert_node( node)
       puts "#{__method__} Inserted at R/C/mR/cT => #{insert_positions}, Node => #{node.to_s}, Node.Parent => #{node.parent.to_s}"
       nil
     end
@@ -248,7 +248,7 @@ module Heaps
       nav_node = root if nav_node.nil?
 
       row_wise_insert(nav_node, this_node)
-      root.move_down(this_node)
+      move_up(this_node)
     end
     
     # Row Wise Insertions
@@ -286,15 +286,54 @@ module Heaps
       end
     end
 
+    def move_up(node)
+      return node unless node.valid? and node.parent.valid?
+
+      puts "#{__method__} Accepting: #{node.to_s}"
+
+      eval_node = node.parent
+      while eval_node.valid? do
+        if (eval_node <=> node) > 0
+          node = eval_node.swap_contents(node)
+          eval_node = node.parent
+        else
+          eval_node = eval_node.parent
+        end
+      end
+      balance_subtree(node)
+    end
+
+    def balance_subtree(node)
+      nleft = empty_object # Any EmptyNode will do
+      nright = empty_object
+
+      if node.parent.valid?         # root is the only node defined to have parent invalid?
+        nleft = node.parent.left
+        nright = node.parent.right
+      end
+      return node unless nleft.valid? and nright.valid?  # nothing to balance
+
+      direction = nleft.left == node ? :right : :left
+      case direction
+        when :left
+          if (nleft <=> node) > 0
+            node = nleft.swap_contents(node)
+          end
+        when :right
+          if (nright <=> node) < 0
+            node = nright.swap_contents(node)
+          end
+      end
+      node
+    end
+
     def remove(node)
       self.size -= 1
       node.data
     end
 
-    def move_up(node)
-    end
-
-    def move_down(node)
+    def empty_object
+      @empty_object ||= EmptyNode.new
     end
 
   end
@@ -364,3 +403,43 @@ end
 # row_wise_insert Inserted: {:label=>"Star Wars: The Empire Strikes Back", :value=>94}
 #
 # {70:{72:{80:{91:{}|{}}|{92:{}|{}}}|{85:{93:{}|{}}|{94:{}|{}}}}|{78:{86:{}|{}}|{90:{}|{}}}}
+
+
+# push Inserted at R/C/mR/cT => [0, 1, 1, 1], Root.Node => {:label=>"Star Wars: Return of the Jedi", :value=>80}, Node.Parent => {:title=>"Heaps::EmptyNode", :value=>-1}
+# {80:{}|{}}
+
+# move_up Accepting: {:label=>"Donnie Darko", :value=>85}
+# push Inserted at R/C/mR/cT => [1, 1, 2, 3], Node => {:label=>"Donnie Darko", :value=>85}, Node.Parent => {:label=>"Star Wars: Return of the Jedi", :value=>80}
+# {80:{85:{}|{}}|{}}
+
+# move_up Accepting: {:label=>"Inception", :value=>86}
+# balance_subtree Accepting: {:label=>"Inception", :value=>86}
+# balance_subtree Passing thru: {:label=>"Inception", :value=>86}
+# push Inserted at R/C/mR/cT => [1, 2, 2, 3], Node => {:label=>"Inception", :value=>86}, Node.Parent => {:label=>"Star Wars: Return of the Jedi", :value=>80}
+# {80:{85:{}|{}}|{86:{}|{}}}
+
+# move_up Accepting: {:label=>"Mad Max 2: The Road Warrior", :value=>98}
+# push Inserted at R/C/mR/cT => [2, 1, 4, 7], Node => {:label=>"Mad Max 2: The Road Warrior", :value=>98}, Node.Parent => {:label=>"Donnie Darko", :value=>85}
+# {80:{85:{98:{}|{}}|{}}|{86:{}|{}}}
+
+# move_up Accepting: {:label=>"The Matrix", :value=>70}
+# swap_contents Replacing: {:label=>"Donnie Darko", :value=>85} with {:label=>"The Matrix", :value=>70}
+# swap_contents Replacing: {:label=>"Star Wars: Return of the Jedi", :value=>80} with {:label=>"The Matrix", :value=>70}
+# push Inserted at R/C/mR/cT => [2, 2, 4, 7], Node => {:label=>"The Matrix", :value=>70}, Node.Parent => {:title=>"Heaps::EmptyNode", :value=>-1}
+# {70:{80:{98:{}|{}}|{85:{}|{}}}|{86:{}|{}}}
+
+# move_up Accepting: {:label=>"Pacific Rim", :value=>72}
+# swap_contents Replacing: {:label=>"Inception", :value=>86} with {:label=>"Pacific Rim", :value=>72}
+# balance_subtree Accepting: {:label=>"Pacific Rim", :value=>72}
+# balance_subtree Swapping Left: 80 > 72
+# swap_contents Replacing: {:label=>"Star Wars: Return of the Jedi", :value=>80} with {:label=>"Pacific Rim", :value=>72}
+# balance_subtree Passing thru: {:label=>"Pacific Rim", :value=>72}
+# push Inserted at R/C/mR/cT => [2, 3, 4, 7], Node => {:label=>"Pacific Rim", :value=>72}, Node.Parent => {:label=>"The Matrix", :value=>70}
+# {70:{72:{98:{}|{}}|{85:{}|{}}}|{80:{86:{}|{}}|{}}}
+
+# {:label=>"Mad Max 2: The Road Warrior", :value=>98}
+# {:label=>"Pacific Rim", :value=>72}
+# {:label=>"Donnie Darko", :value=>85}
+# {:label=>"The Matrix", :value=>70}
+# {:label=>"Inception", :value=>86}
+# {:label=>"Star Wars: Return of the Jedi", :value=>80}
