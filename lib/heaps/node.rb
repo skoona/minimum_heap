@@ -84,8 +84,8 @@ module Heaps
 
     def clean(children=false)
       if children
-        left.valid?  ? left.clean(children) : nil
-        right.valid? ? right.clean(children) : nil
+        left&.valid?  ? left.clean(children) : nil
+        right&.valid? ? right.clean(children) : nil
       end
       self.label = nil
       self.value = nil
