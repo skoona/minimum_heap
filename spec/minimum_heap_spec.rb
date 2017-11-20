@@ -217,9 +217,12 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
       hp1_size = hp1.size
       hp2_size = hp2.size
       hp_merged = hp1.merge(hp2)
+
       expect(hp_merged).to be
       expect(hp_merged).to_not equal(hp1)
       expect(hp_merged.size).to eq(hp2_size + hp1_size - 1)
+      expect(hp1.size).to eq(hp1_size)
+      expect(hp2.size).to eq(hp2_size)
     end
 
     it "#merge! returns this heap after consuming other. " do
@@ -228,17 +231,20 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
       hp1_size = hp1.size
       hp2_size = hp2.size
       hp_merged = hp1.merge!(hp2)
+
       expect(hp_merged).to be
       expect(hp_merged).to equal(hp1)
+      expect(hp2.size).to eq(hp2_size)
       expect(hp_merged.size).to eq(hp2_size + hp1_size)
     end
 
-    it "#merge destroys this heap and other after creating a new combined heap. " do
+    it "#union returns new heap composed of this and other, destroying both source heaps. " do
       hp1 = described_class.new(root, node1)
       hp2 = described_class.new(node4, node5)
       hp1_size = hp1.size
       hp2_size = hp2.size
-      hp_merged = hp1.merge(hp2)
+      hp_merged = hp1.union(hp2)
+
       expect(hp_merged).to be
       expect(hp_merged).to_not equal(hp1)
       expect(hp_merged.size).to eq(hp2_size + hp1_size)

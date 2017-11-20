@@ -10,12 +10,13 @@ A Binary Heap is a Binary Tree with following properties.
 
 3) All child nodes are larger than their parent
 4) The smallest element of the min-heap is at the root
-5) They can refer to another node to the left with a smaller value
-6) They can refer to another node to the right with a larger value
+5) The left child of a parent is less than the right child of same parent
 
 Ref: http://www.geeksforgeeks.org/binary-heap/
+Ref: https://en.wikipedia.org/wiki/Heap_(data_structure)
+Ref: https://en.wikibooks.org/wiki/Data_Structures/Min_and_Max_Heaps
 
-To experiment with that code, run `bin/console` for an interactive prompt.
+To experiment with this code, execute `bin/console` for an interactive prompt.
 
 
 ## Usage
