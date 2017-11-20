@@ -65,5 +65,9 @@ module Heaps
       nil
     end
 
+    def move_down
+      self
+    end
+
     end
 end

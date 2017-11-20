@@ -94,12 +94,20 @@ module Heaps
 
   class MinimumHeap
 
-    attr_reader :root
+    attr_reader :root, :last_node
 
-    # Presumed input: ['label', value] | [['label', value],...] | [{label: 'label', value: value},...]
+    ##
+    # Class Creates
+    ##
+    def self.heapify(*user_datas_ary)
+      new(*user_datas_ary)
+    end
+
+    # Presumed input - one or more: [['label', value],...] | [{label: 'label', value: value},...]
     def initialize(*args)
-      @size = 1
+      @size = 0
       @root = Heaps::EmptyNode.new
+      @last_node = @root
       unless args.empty?
         case args.first.first
           when Array
@@ -120,43 +128,53 @@ module Heaps
     ##
     def push(user_data)
       node = valid_node( user_data)
-      if !root.valid? and @size == 1
+      if !root.valid? and @size == 0
         @root = node
+        @size += 1
         puts "#{__method__} Inserted at R/C/mR/cT => #{insert_positions}, Root.Node => #{node.to_s}, Node.Parent => #{node.parent.to_s}"
         return nil
-      else
-        @size += 1
       end
+
+      @size += 1
       node = insert_node( node)
       puts "#{__method__} Inserted at R/C/mR/cT => #{insert_positions}, Node => #{node.to_s}, Node.Parent => #{node.parent.to_s}"
       nil
     end
     alias_method :<<, :push
 
+    # Remove root and adjust heap
     def pop
+      puts "Removing Node: #{@root.to_s}"
       remove(@root)
     end
 
-    def replace(user_data)
+    # Remove root and immediately replace with user_data, i.e. new_node
+    def replace!(user_data)
       node = valid_node(user_data)
+      return nil if node.nil?
+
+      puts "Replacing Node: #{@root.to_s}, with #{node.to_s}"
+      remove(@root, node)
     end
 
     def peek
       @root.data
     end
 
-    def delete(user_data)
-      node = valid_node(user_data)
+    # Returns deleted node's data or nil
+    def delete!(user_data)
+      node = include?(user_data, true)
+      return nil if node.nil?
+      puts "Deleteing Node: #{node.to_s}"
+      remove(node)
     end
 
-    # severs the tree after root node, expecting GC to cleanup
+    # Drops all tree references in every tree node,
+    # - expecting GC to cleanup disconnected nodes
     def clear!
-      root.left.parent ? (root.left.parent = nil) : nil
-      root.right.parent ? (root.right.parent = nil) : nil
-      root.left = nil
-      root.right = nil
-      root.parent = nil
-      @root = nil
+      root.clean(true)
+      @root = empty_object
+      @last_node = @root
       @size = 0
       nil
     end
@@ -164,9 +182,6 @@ module Heaps
     ##
     # Creation
     ##
-    def self.heapify(*user_datas_ary)
-      new(*user_datas_ary)
-    end
 
     # new_heap = this + other
     def merge(other_heap)
@@ -189,8 +204,11 @@ module Heaps
     ##
     # Inspection
     ##
-    def include?(user_data)
+    def include?(user_data, node_only=false)
       node = valid_node(user_data)
+      return nil if node.nil?
+      node = root.include?(node)
+      node.nil? or !node.valid? ? nil : (node_only ? node : node.to_s)
     end
 
     def size
@@ -203,12 +221,12 @@ module Heaps
     end
 
     def inspect
-      @root.send __method__
+      @root.inspect
     end
     alias_method :to_s, :inspect
 
     def to_a
-      @root.send __method__
+      @root.to_a
     end
 
     def display(node=@root)
@@ -260,7 +278,7 @@ module Heaps
       end
       nav_node = root if nav_node.nil?
 
-      row_wise_insert(nav_node, this_node)
+      @last_node = row_wise_insert(nav_node, this_node)
 
       maintain_heap_property(this_node)
     end
@@ -281,12 +299,14 @@ module Heaps
           count -= 1
         end
 
-        row_wise_insert( node , new_node )
+        node = row_wise_insert( node , new_node )
       end
 
       node
     end
 
+    # Heap Property: The value of parent is smaller than that of either child
+    # - and both subtrees have the heap property.
     def maintain_heap_property(node)
       return node unless node.valid? and node.parent.valid?
 
@@ -305,6 +325,8 @@ module Heaps
       node
     end
 
+    # The left child must be smaller than the right child,
+    # - and both must be greater than the parent
     def balance_subtree(node)
       return node unless node.valid? and
                     node.parent.valid? and
@@ -324,9 +346,25 @@ module Heaps
       node
     end
 
-    def remove(node)
-      self.size -= 1
-      node.data
+    # Remove root node and replace it with last node inserted
+    # - or swap it with replacement node is supplied
+    def remove(node, replacement_node=nil)
+      return nil if node.nil? or !node.valid?
+      node_value = node.data                          # stash nodes data for method return
+
+      if replacement_node
+        node.swap_contents(replacement_node)           # Swap in value of last node to preserve last nodes value
+        replacement_node.clean                         # remove tree references from last node, allowing GC
+
+      else
+        node.swap_contents(last_node)                  # Swap in value of last node to preserve last nodes value
+        last_node.clean                                # uncouple last node from tree
+        @size -= 1
+      end
+
+      @last_node = node.move_down                     # restore heap properties
+
+      node_value
     end
 
     def empty_object
@@ -335,108 +373,3 @@ module Heaps
 
   end
 end
-
-
-# push Insert Root, R/C => [0, 1, 1, 1]
-# push Insert at R/C => [1, 1, 2, 3]
-# Row: 1, TargetRow: 1
-# ** Row: 1, TargetRow: 1 StartNode: {:label=>"The Matrix", :value=>70}
-# row_wise_insert Inserted: {:label=>"Pacific Rim", :value=>72}
-# push Insert at R/C => [1, 2, 2, 3]
-# Row: 1, TargetRow: 1
-# ** Row: 1, TargetRow: 1 StartNode: {:label=>"The Matrix", :value=>70}
-# row_wise_insert Inserted: {:label=>"Braveheart", :value=>78}
-# push Insert at R/C => [2, 1, 4, 7]
-# Row: 1, TargetRow: 2
-#   Row: 1, TargetRow: 2
-# ** Row: 2, TargetRow: 2 StartNode: {:label=>"Pacific Rim", :value=>72}
-# row_wise_insert Inserted: {:label=>"Star Wars: Return of the Jedi", :value=>80}
-# push Insert at R/C => [2, 2, 4, 7]
-# Row: 1, TargetRow: 2
-#   Row: 1, TargetRow: 2
-# ** Row: 2, TargetRow: 2 StartNode: {:label=>"Pacific Rim", :value=>72}
-# row_wise_insert Inserted: {:label=>"Donnie Darko", :value=>85}
-# push Insert at R/C => [2, 3, 4, 7]
-# Row: 1, TargetRow: 2
-#   Row: 1, TargetRow: 2
-# ** Row: 2, TargetRow: 2 StartNode: {:label=>"Pacific Rim", :value=>72}
-#   row_wise_insert Bridging: {:label=>"Braveheart", :value=>78}
-# ** row_wise_insert Bridging: {:label=>"Braveheart", :value=>78}
-# row_wise_insert Inserted: {:label=>"Inception", :value=>86}
-# push Insert at R/C => [2, 4, 4, 7]
-# Row: 1, TargetRow: 2
-#   Row: 1, TargetRow: 2
-# ** Row: 2, TargetRow: 2 StartNode: {:label=>"Pacific Rim", :value=>72}
-#   row_wise_insert Bridging: {:label=>"Braveheart", :value=>78}
-# ** row_wise_insert Bridging: {:label=>"Braveheart", :value=>78}
-# row_wise_insert Inserted: {:label=>"District 9", :value=>90}
-# push Insert at R/C => [3, 1, 8, 15]
-# Row: 1, TargetRow: 3
-#   Row: 1, TargetRow: 3
-#   Row: 2, TargetRow: 3
-# ** Row: 3, TargetRow: 3 StartNode: {:label=>"Star Wars: Return of the Jedi", :value=>80}
-# row_wise_insert Inserted: {:label=>"The Shawshank Redemption", :value=>91}
-# push Insert at R/C => [3, 2, 8, 15]
-# Row: 1, TargetRow: 3
-#   Row: 1, TargetRow: 3
-#   Row: 2, TargetRow: 3
-# ** Row: 3, TargetRow: 3 StartNode: {:label=>"Star Wars: Return of the Jedi", :value=>80}
-# row_wise_insert Inserted: {:label=>"The Martian", :value=>92}
-# push Insert at R/C => [3, 3, 8, 15]
-# Row: 1, TargetRow: 3
-#   Row: 1, TargetRow: 3
-#   Row: 2, TargetRow: 3
-# ** Row: 3, TargetRow: 3 StartNode: {:label=>"Star Wars: Return of the Jedi", :value=>80}
-#   row_wise_insert Bridging: {:label=>"Donnie Darko", :value=>85}
-# ** row_wise_insert Bridging: {:label=>"Donnie Darko", :value=>85}
-# row_wise_insert Inserted: {:label=>"Star Wars: A New Hope", :value=>93}
-# push Insert at R/C => [3, 4, 8, 15]
-# Row: 1, TargetRow: 3
-#   Row: 1, TargetRow: 3
-#   Row: 2, TargetRow: 3
-# ** Row: 3, TargetRow: 3 StartNode: {:label=>"Star Wars: Return of the Jedi", :value=>80}
-#   row_wise_insert Bridging: {:label=>"Donnie Darko", :value=>85}
-# ** row_wise_insert Bridging: {:label=>"Donnie Darko", :value=>85}
-# row_wise_insert Inserted: {:label=>"Star Wars: The Empire Strikes Back", :value=>94}
-#
-# {70:{72:{80:{91:{}|{}}|{92:{}|{}}}|{85:{93:{}|{}}|{94:{}|{}}}}|{78:{86:{}|{}}|{90:{}|{}}}}
-
-
-# push Inserted at R/C/mR/cT => [0, 1, 1, 1], Root.Node => {:label=>"Star Wars: Return of the Jedi", :value=>80}, Node.Parent => {:title=>"Heaps::EmptyNode", :value=>-1}
-# {80:{}|{}}
-
-# maintain_heap_property Accepting: {:label=>"Donnie Darko", :value=>85}
-# push Inserted at R/C/mR/cT => [1, 1, 2, 3], Node => {:label=>"Donnie Darko", :value=>85}, Node.Parent => {:label=>"Star Wars: Return of the Jedi", :value=>80}
-# {80:{85:{}|{}}|{}}
-
-# maintain_heap_property Accepting: {:label=>"Inception", :value=>86}
-# balance_subtree Accepting: {:label=>"Inception", :value=>86}
-# balance_subtree Passing thru: {:label=>"Inception", :value=>86}
-# push Inserted at R/C/mR/cT => [1, 2, 2, 3], Node => {:label=>"Inception", :value=>86}, Node.Parent => {:label=>"Star Wars: Return of the Jedi", :value=>80}
-# {80:{85:{}|{}}|{86:{}|{}}}
-
-# maintain_heap_property Accepting: {:label=>"Mad Max 2: The Road Warrior", :value=>98}
-# push Inserted at R/C/mR/cT => [2, 1, 4, 7], Node => {:label=>"Mad Max 2: The Road Warrior", :value=>98}, Node.Parent => {:label=>"Donnie Darko", :value=>85}
-# {80:{85:{98:{}|{}}|{}}|{86:{}|{}}}
-
-# maintain_heap_property Accepting: {:label=>"The Matrix", :value=>70}
-# swap_contents Replacing: {:label=>"Donnie Darko", :value=>85} with {:label=>"The Matrix", :value=>70}
-# swap_contents Replacing: {:label=>"Star Wars: Return of the Jedi", :value=>80} with {:label=>"The Matrix", :value=>70}
-# push Inserted at R/C/mR/cT => [2, 2, 4, 7], Node => {:label=>"The Matrix", :value=>70}, Node.Parent => {:title=>"Heaps::EmptyNode", :value=>-1}
-# {70:{80:{98:{}|{}}|{85:{}|{}}}|{86:{}|{}}}
-
-# maintain_heap_property Accepting: {:label=>"Pacific Rim", :value=>72}
-# swap_contents Replacing: {:label=>"Inception", :value=>86} with {:label=>"Pacific Rim", :value=>72}
-# balance_subtree Accepting: {:label=>"Pacific Rim", :value=>72}
-# balance_subtree Swapping Left: 80 > 72
-# swap_contents Replacing: {:label=>"Star Wars: Return of the Jedi", :value=>80} with {:label=>"Pacific Rim", :value=>72}
-# balance_subtree Passing thru: {:label=>"Pacific Rim", :value=>72}
-# push Inserted at R/C/mR/cT => [2, 3, 4, 7], Node => {:label=>"Pacific Rim", :value=>72}, Node.Parent => {:label=>"The Matrix", :value=>70}
-# {70:{72:{98:{}|{}}|{85:{}|{}}}|{80:{86:{}|{}}|{}}}
-
-# {:label=>"Mad Max 2: The Road Warrior", :value=>98}
-# {:label=>"Pacific Rim", :value=>72}
-# {:label=>"Donnie Darko", :value=>85}
-# {:label=>"The Matrix", :value=>70}
-# {:label=>"Inception", :value=>86}
-# {:label=>"Star Wars: Return of the Jedi", :value=>80}
