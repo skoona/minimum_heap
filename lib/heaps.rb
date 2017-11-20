@@ -202,7 +202,7 @@ module Heaps
       self
     end
 
-    # new_heap = this + other, destroying both
+    # new_heap = this + other, destroying this and other
     def union(other_heap)
       return nil unless other_heap.is_a?(self.class)
       combined = (self.to_a + other_heap.to_a).flatten.uniq
@@ -377,30 +377,6 @@ module Heaps
       end
 
       node_value
-    end
-
-    # Row Wise Collector
-    # - use to force #to_a to return ordered sequence
-    def row_wise_collector(node, new_node)
-
-      if node != new_node
-        count = 0
-        while node.parent.right == node do     # walk up to find path to right column
-          node = node.parent
-          count += 1
-        end
-
-        node = node.parent.right               # move into right column
-
-        while count > 0 && node.left.valid? do # walk down to row
-          node = node.left
-          count -= 1
-        end
-
-        node = row_wise_collector( node , new_node )
-      end
-
-      node
     end
 
     def empty_object
