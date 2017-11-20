@@ -17,18 +17,6 @@ module Heaps
       self.class.name
     end
 
-    def data
-      {label: label, value: value}
-    end
-
-    def data=(*)
-      nil
-    end
-
-    def to_s
-      data
-    end
-
     def left(*)
       false
     end
@@ -41,32 +29,65 @@ module Heaps
       false
     end
 
-    def insert_node(*)
+    def valid?
       false
+    end
+
+    def data
+      {label: label, value: value}
+    end
+
+    def data=(*)
+      nil
     end
 
     def include?(*)
       false
     end
 
-    def valid?
+    def insert_node(*)
       false
     end
 
-    def to_a
-      []
+    def move_down
+      nil
+    end
+
+    def swap_contents(*)
+      nil
+    end
+
+    def clean(*)
+      nil
+    end
+
+    def to_s
+      data
     end
 
     def inspect(*)
       "{}"
     end
 
-    def <=>(*)
+    def to_a
+      []
+    end
+
+    def <(*)
       nil
     end
 
-    def move_down
-      self
+    def >(*)
+      nil
+    end
+
+    def ==(*)
+      nil
+    end
+    alias_method  :eql?, :==
+
+    def <=>(*)
+      nil
     end
 
     end

@@ -108,6 +108,8 @@ module Heaps
       @size = 0
       @root = Heaps::EmptyNode.new
       @last_node = @root
+      @debug = false
+
       unless args.empty?
         case args.first.first
           when Array
@@ -131,20 +133,20 @@ module Heaps
       if !root.valid? and @size == 0
         @root = node
         @size += 1
-        puts "#{__method__} Inserted at R/C/mR/cT => #{insert_positions}, Root.Node => #{node.to_s}, Node.Parent => #{node.parent.to_s}"
+        dlog "#{__method__} Inserted at R/C/mR/cT => #{insert_positions}, Root.Node => #{node.to_s}, Node.Parent => #{node.parent.to_s}"
         return nil
       end
 
       @size += 1
       node = insert_node( node)
-      puts "#{__method__} Inserted at R/C/mR/cT => #{insert_positions}, Node => #{node.to_s}, Node.Parent => #{node.parent.to_s}"
+      dlog "#{__method__} Inserted at R/C/mR/cT => #{insert_positions}, Node => #{node.to_s}, Node.Parent => #{node.parent.to_s}"
       nil
     end
     alias_method :<<, :push
 
     # Remove root and adjust heap
     def pop
-      puts "Removing Node: #{@root.to_s}"
+      dlog "Removing Node: #{@root.to_s}"
       remove(@root)
     end
 
@@ -153,7 +155,7 @@ module Heaps
       node = valid_node(user_data)
       return nil if node.nil?
 
-      puts "Replacing Node: #{@root.to_s}, with #{node.to_s}"
+      dlog "Replacing Node: #{@root.to_s}, with #{node.to_s}"
       remove(@root, node)
     end
 
@@ -165,7 +167,7 @@ module Heaps
     def delete!(user_data)
       node = include?(user_data, true)
       return nil if node.nil?
-      puts "Deleteing Node: #{node.to_s}"
+      dlog "Deleteing Node: #{node.to_s}"
       remove(node)
     end
 
@@ -231,7 +233,7 @@ module Heaps
 
     def display(node=@root)
       node.to_a.each do |item|
-        puts item
+        dlog item
       end
     end
 
@@ -264,7 +266,7 @@ module Heaps
       [row_number, target_location, row_max_count, tree_capacity]
     end
 
-    # returns this_node on sucess
+    # returns this_node on success
     def insert_node(this_node)
       row = 1
       nav_node = nil
@@ -346,10 +348,10 @@ module Heaps
       node
     end
 
-    # Remove root node and replace it with last node inserted
-    # - or swap it with replacement node is supplied
+    # Remove node and replace it with last node inserted
+    # - or swap it with replacement node if supplied
     def remove(node, replacement_node=nil)
-      return nil if node.nil? or !node.valid?
+      return node if node.nil? or !node.valid?
       node_value = node.data                          # stash nodes data for method return
 
       if replacement_node
@@ -362,13 +364,45 @@ module Heaps
         @size -= 1
       end
 
-      @last_node = node.move_down                     # restore heap properties
+      if size > 1
+        @last_node = node.move_down                    # restore heap properties
+      else
+        @last_node = node
+      end
 
       node_value
     end
 
+    # Row Wise Collector
+    # - use to force #to_a to return ordered sequence
+    def row_wise_collector(node, new_node)
+
+      if node != new_node
+        count = 0
+        while node.parent.right == node do     # walk up to find path to right column
+          node = node.parent
+          count += 1
+        end
+
+        node = node.parent.right               # move into right column
+
+        while count > 0 && node.left.valid? do # walk down to row
+          node = node.left
+          count -= 1
+        end
+
+        node = row_wise_collector( node , new_node )
+      end
+
+      node
+    end
+
     def empty_object
       @empty_object ||= EmptyNode.new
+    end
+
+    def dlog(msg)
+      puts msg if @debug
     end
 
   end

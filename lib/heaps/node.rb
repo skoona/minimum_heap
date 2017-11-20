@@ -20,13 +20,6 @@ module Heaps
       true
     end
 
-    # Returns self(found matching node) or nil
-    def include?(other_node)
-      (self.label == other_node.label && self.value == other_node.value ? self : nil) ||
-          (left.valid? ? left.include?(other_node) : nil) ||
-          (right.valid? ? right.include?(other_node) : nil)
-    end
-
     def data
       {label: label.dup, value: value.dup}
     end
@@ -37,39 +30,11 @@ module Heaps
       nil
     end
 
-    def to_s
-      data
-    end
-
-    def inspect
-      "{#{value}:#{left.inspect}|#{right.inspect}}"
-    end
-
-    def to_a
-      [self.data] + left.to_a + right.to_a
-    end
-
-    def <=>(other)
-      if self.value > other.value
-        1
-      elsif self.value < other.value
-        -1
-      elsif self.value == other.value
-        0
-      else
-        nil
-      end
-    end
-
-    def ==(other)
-      self.class === other and
-          other.value == self.value and
-          other.label == self.label
-    end
-    alias_method  :eql?, :==
-
-    def hash
-      self.label.hash ^ self.value.hash # XOR
+    # Returns self(found matching node) or nil
+    def include?(other_node)
+      (label == other_node.label && value == other_node.value ? self : nil) ||
+          (left.valid? ? left.include?(other_node) : nil) ||
+          (right.valid? ? right.include?(other_node) : nil)
     end
 
     # Insert here
@@ -91,9 +56,10 @@ module Heaps
     def move_down
       nleft = nil
       nright = nil
+
       maintain_child_property(self)
 
-      if left.valid? and (self <=> left) > 0               # Must be more than parent:
+      if left.valid? and (self <=> left) > 0                # Must be more than parent:
         swap_contents(left)
         maintain_child_property(self)
       end
@@ -103,14 +69,14 @@ module Heaps
         maintain_child_property(self)
       end
 
-      nleft = left.move_down  if left.valid?
+      nleft  = left.move_down  if left.valid?
       nright = right.move_down if right.valid?
 
       nright || nleft || self
     end
 
     def swap_contents(node)
-      old = self.data
+      old = data
       self.data = node.data
       node.data = old
       self
@@ -125,7 +91,7 @@ module Heaps
       self.value = nil
       self.left = nil
       self.right = nil
-      if parent && parent.valid?
+      if parent&.valid?                 # TODO: Ruby 2.4 feature 'obj&.method' nil safe
         if parent.left == self          # uncouple last node from tree
           parent.left = EmptyNode.new
         end
@@ -137,14 +103,55 @@ module Heaps
       self
     end
 
+    def to_s
+      data
+    end
+
+    def inspect
+      "{#{value}:#{left.inspect}|#{right.inspect}}"
+    end
+
+    def to_a
+      left.to_a + [data] + right.to_a
+    end
+
+    def <=>(other)
+      if value > other.value
+        1
+      elsif value < other.value
+        -1
+      elsif value == other.value
+        0
+      else
+        nil
+      end
+    end
+
+    def <(other)
+      hash < other.hash
+    end
+
+    def >(other)
+      hash > other.hash
+    end
+
+    def ==(other)
+      self.class === other and hash == other.hash
+    end
+    alias_method  :eql?, :==
+
+    def hash
+      label.hash ^ value.hash # XOR
+    end
+
   private
 
     # The left child must be smaller than the right child,
     # - and both must be greater than the parent
     def maintain_child_property(node)
-      return node unless node.valid? and
-                    node.left.valid? and
-                      node.right.valid?  # nothing to balance
+      return node unless node&.valid? and
+                         node&.left&.valid? and
+                         node&.right&.valid?      # nothing to balance
 
       if (node.left <=> node.right) > 0
         node = node.left.swap_contents(node.right)
