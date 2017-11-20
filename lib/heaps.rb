@@ -54,7 +54,7 @@
 #
 # Creation
 # ---------
-#   create-heap:
+#   create-heap: (new)
 #     create an empty heap
 #   heapify:
 #     create a heap out of given array of elements
@@ -151,6 +151,10 @@ module Heaps
       remove(@root)
     end
 
+    def peek
+      @root.data
+    end
+
     # Remove root and immediately replace with user_data, i.e. new_node
     def replace!(user_data)
       node = valid_node(user_data)
@@ -158,10 +162,6 @@ module Heaps
 
       dlog "Replacing Node: #{@root.to_s}, with #{node.to_s}"
       remove(@root, node)
-    end
-
-    def peek
-      @root.data
     end
 
     # Returns deleted node's data or nil
@@ -203,7 +203,7 @@ module Heaps
     end
 
     # new_heap = this + other, destroying this and other
-    def union(other_heap)
+    def union!(other_heap)
       return nil unless other_heap.is_a?(self.class)
       combined = (self.to_a + other_heap.to_a).flatten.uniq
       other_heap.clear!

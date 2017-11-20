@@ -36,75 +36,13 @@ To experiment with this code, execute `bin/console` for an interactive prompt.
 # tree.root.to_a
 # => => ["The Matrix: 87", "Pacific Rim: 72", "Braveheart: 78", "Star Wars: Return of the Jedi: 80"]
 #
-#               Actual                   Desired
-#                  72                       72
-#                /   \                    /   \
-#              87    78                 78    80
-#                   /  \               /  \
-#                      80             87
+#                Desired
+#                  72
+#                /   \
+#              78    80
+#              /\    /
+#            80 87  e
 
-####
-# Test Run
-####
-# Inserting Donnie Darko: 85
-# Before: {87:{}|{}}
-# TREE-NODE: {87:{}|{}}  ==> RowCalc: 1, Target: 1, Location: 1
-# Swapping...
-#     After: {85:{87:{}|{}}|{}}
-# The Matrix: 87
-# Donnie Darko: 85
-# ==========
-#     Inserting Inception: 86
-# Before: {85:{87:{}|{}}|{}}
-# TREE-NODE: {85:{87:{}|{}}|{}}  ==> RowCalc: 1, Target: 2, Location: 1
-# After: {85:{87:{}|{}}|{86:{}|{}}}
-# The Matrix: 87
-# Donnie Darko: 85
-# Inception: 86
-# ==========
-#     Inserting District 9: 90
-# Before: {85:{87:{}|{}}|{86:{}|{}}}
-# TREE-NODE: {86:{}|{}}  ==> RowCalc: 2, Target: 1, Location: 2
-# After: {85:{87:{}|{}}|{86:{}|{90:{}|{}}}}
-# The Matrix: 87
-# Donnie Darko: 85
-# Inception: 86
-# District 9: 90
-# ==========
-#     Inserting Braveheart: 78
-# Before: {85:{87:{}|{}}|{86:{}|{90:{}|{}}}}
-# TREE-NODE: {87:{}|{}}  ==> RowCalc: 2, Target: 2, Location: 2
-# Swapping...
-#     After: {78:{85:{87:{}|{}}|{}}|{86:{}|{90:{}|{}}}}
-# The Matrix: 87
-# Donnie Darko: 85
-# Braveheart: 78
-# Inception: 86
-# District 9: 90
-# ==========
-#     Inserting Star Wars: A New Hope: 93
-# Before: {78:{85:{87:{}|{}}|{}}|{86:{}|{90:{}|{}}}}
-# TREE-NODE: {86:{}|{90:{}|{}}}  ==> RowCalc: 2, Target: 3, Location: 2
-# After: {78:{85:{87:{}|{}}|{}}|{86:{}|{90:{}|{93:{}|{}}}}}
-# The Matrix: 87
-# Donnie Darko: 85
-# Braveheart: 78
-# Inception: 86
-# District 9: 90
-# Star Wars: A New Hope: 93
-# ==========
-#     {78:{85:{87:{}|{}}|{}}|{86:{}|{90:{}|{93:{}|{}}}}}
-#
-#               Actual                   Desired
-#                  78                       78
-#                /   \                    /    \
-#              85    86                 85     86
-#             / \   / \                / \    / \
-#           87        90              87 90  93
-#                    / \
-#                      93
-#
-####
 
  Ref: http://www.geeksforgeeks.org/tree-traversals-inorder-preorder-and-postorder/
    Depth First Traversals:
@@ -124,35 +62,43 @@ To experiment with this code, execute `bin/console` for an interactive prompt.
 # Ideal Interface
 ####
 class MinimumHeap
-   def initialize(first_node)
+   def self.heapify(*user_data_ary)
    end
-   def push(node)
+   def initialize(*args)
+   end
+
+   def push(user_data)     | alias #<<
    end
    def pop
    end
-   def delete(node)
+   def peek
    end
-   def min_node
+   def include?(user_data)
    end
-   def max_node
+
+   def replace!(user_data)
    end
-   def size
+   def delete!(user_data)
+   end
+
+   def merge(other_heap)
+   end
+   def merge!(other_heap)
+   end
+   def union!(other_heap)
+   end
+
+   def clear!
+   end
+   def size     | alias #length
    end
    def empty?
    end
-
-   def include?(title|value)
+   def to_a
    end
-   def find_node(title|value)
+   def display
    end
-   def to_a(node=root)
-   end
-   def each(&block)
-   end
-
-   def display(node=root)
-   end
-   def inspect(node=root)
+   def inspect  | alias #to_s
    end
 end
    
@@ -271,12 +217,6 @@ Or install it yourself as:
 
 ## Development
 
-Considerations: Navigation
-    tree_node < new_node        :Left
-    tree_node > new_node        :Move_Up
-    tree_node.left < new_node   :Right
-    tree_node.right > new_node  :Move_up
-    
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
@@ -284,7 +224,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/heaps. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/skoona/heaps. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 
 ## License

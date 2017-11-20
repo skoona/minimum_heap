@@ -216,6 +216,7 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
       hp2 = described_class.new(node4, node5, node6, node7, node8)
       hp1_size = hp1.size
       hp2_size = hp2.size
+
       hp_merged = hp1.merge(hp2)
 
       expect(hp_merged).to be
@@ -230,6 +231,7 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
       hp2 = described_class.new(node4, node5, node6, node7, node8)
       hp1_size = hp1.size
       hp2_size = hp2.size
+
       hp_merged = hp1.merge!(hp2)
 
       expect(hp_merged).to be
@@ -243,7 +245,8 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
       hp2 = described_class.new(node4, node5)
       hp1_size = hp1.size
       hp2_size = hp2.size
-      hp_merged = hp1.union(hp2)
+
+      hp_merged = hp1.union!(hp2)
 
       expect(hp_merged).to be
       expect(hp_merged).to_not equal(hp1)
