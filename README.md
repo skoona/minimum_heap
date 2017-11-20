@@ -26,22 +26,14 @@ To experiment with this code, execute `bin/console` for an interactive prompt.
 ####
 # Console Run
 ####
-# root = Heaps::Node.new("The Matrix", 87)
-# tree = Heaps::MinimumHeap.new(root)
-# tree.insert Heaps::Node.new("Pacific Rim", 72)
-# tree.insert Heaps::Node.new("Braveheart", 78)
-# tree.insert Heaps::Node.new("Star Wars: Return of the Jedi", 80)
-# tree.root
-# => {72:{87:{}|{}}|{78:{}|{80:{}|{}}}}
-# tree.root.to_a
-# => => ["The Matrix: 87", "Pacific Rim: 72", "Braveheart: 78", "Star Wars: Return of the Jedi: 80"]
-#
-#                Desired
-#                  72
-#                /   \
-#              78    80
-#              /\    /
-#            80 87  e
+# tree = Heaps::MinimumHeap.new(["The Matrix", 87])
+# tree.push(["Pacific Rim", 72])
+# tree.push(["Braveheart", 78])
+# tree.push(["Star Wars: Return of the Jedi", 80])
+# tree.inspect
+# ==> "{72:{78:{80:{}|{}}|{}}|{87:{}|{}}}"
+# tree.pop
+# ==>  {:label=>"Pacific Rim", :value=>72}
 
 
  Ref: http://www.geeksforgeeks.org/tree-traversals-inorder-preorder-and-postorder/
@@ -60,6 +52,8 @@ To experiment with this code, execute `bin/console` for an interactive prompt.
 
 ####
 # Ideal Interface
+# - EmptyNode
+# - Node
 ####
 class MinimumHeap
    def self.heapify(*user_data_ary)
