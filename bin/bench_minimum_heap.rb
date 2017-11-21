@@ -65,10 +65,10 @@ Benchmark.ips do |x|
   b_heap = Heaps::MinimumHeap.new(source_data[500..999])
 
   x.report('Array') do
-    catcher_array = []
-    r = Array.new(source_data).sort {|a, b| a.last <=> b.last }
-    r.each {|x| catcher_array << x}    
-    r.clear
+    catcher_array = Array.new
+    source_data.each {|y| catcher_array << y} # load each
+    catcher_array.sort {|a, b| a.last <=> b.last }
+    catcher_array.clear
   end
 
   x.report('MinimumHeap') do
