@@ -39,6 +39,7 @@ module Heaps
 
     # Insert here
     def insert_node(node)
+      return node if left.nil? || right.nil?
       if left.valid?
         if right.valid?
           self
@@ -57,20 +58,20 @@ module Heaps
       nleft = nil
       nright = nil
 
-      maintain_child_property(self)
 
-      if left.valid? and (self <=> left) > 0                # Must be more than parent:
+      if left.valid? and self > left                 # Must be more than parent:
         swap_contents(left)
-        maintain_child_property(self)
       end
 
-      if right.valid? and (self <=> right) > 0              # Must be more than parent:
+      if right.valid? and self > right              # Must be more than parent:
         swap_contents(right)
-        maintain_child_property(self)
       end
+      maintain_child_property(self)
 
       nleft  = left.move_down  if left.valid?
       nright = right.move_down if right.valid?
+
+      maintain_child_property(self)
 
       nright || nleft || self
     end
@@ -128,11 +129,11 @@ module Heaps
     end
 
     def <(other)
-      hash < other.hash
+      (self <=> other) < 0
     end
 
     def >(other)
-      hash > other.hash
+      (self <=> other) > 0
     end
 
     def ==(other)
@@ -149,12 +150,12 @@ module Heaps
     # The left child must be smaller than the right child,
     # - and both must be greater than the parent
     def maintain_child_property(node)
-      return node unless node&.valid? and
-                         node&.left&.valid? and
-                         node&.right&.valid?      # nothing to balance
+      return node unless node.valid? and
+                         node.left.valid? and
+                         node.right.valid?      # nothing to balance
 
-      if (node.left <=> node.right) > 0
-        node = node.left.swap_contents(node.right)
+      if node.left > node.right
+        node = node.right.swap_contents(node.left)
       end
 
       node

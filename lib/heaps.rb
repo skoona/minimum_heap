@@ -111,6 +111,8 @@ module Heaps
 
       unless args.empty?
         case args.first.first
+          when Heaps::Node
+            args.first.each {|udata| push( udata ) }
           when Array
             args.first.each {|udata| push( udata ) }
           when Hash
@@ -138,9 +140,11 @@ module Heaps
         return nil
       end
 
-      @size += 1
-      node = insert_node( node)
-      dlog "#{__method__} Inserted at R/C/mR/cT => #{insert_positions}, Node => #{node.to_s}, Node.Parent => #{node.parent.to_s}"
+      unless node.nil? || node.left.nil? || node.right.nil?
+        @size += 1
+        node = insert_node( node)
+        dlog "#{__method__} Inserted at R/C/mR/cT => #{insert_positions}, Node => #{node.to_s}, Node.Parent => #{node.parent.to_s}"
+      end
       nil
     end
     alias_method :<<, :push
@@ -285,17 +289,21 @@ module Heaps
         nav_node = nav_node.left
         row += 1
       end
-
-      @last_node = row_wise_insert(nav_node, this_node)
+    
+      row_wise_insert(nav_node, this_node) 
 
       maintain_heap_property(this_node)
     end
     
     # Row Wise Insertions
     def row_wise_insert(snode, new_node)
+      return new_node if snode.nil?
+      
       node = snode.insert_node( new_node )
-
-      if node != new_node
+      if node == new_node
+        @last_node = node
+        
+      elsif node != new_node
         count = 0
         while node.parent.right == node do     # walk up to find path to right column
           node = node.parent
@@ -342,11 +350,11 @@ module Heaps
                         node.parent.right.valid?  # nothing to balance
 
       if node.parent.left == node
-        if (node.parent.right <=> node) < 0
-          node = node.parent.right.swap_contents(node)
+        if node > node.parent.right
+          node = node.swap_contents(node.parent.right)
         end
       else
-        if (node.parent.left <=> node) > 0
+        if node.parent.left > node
           node = node.parent.left.swap_contents(node)
         end
       end
