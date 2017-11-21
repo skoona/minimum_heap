@@ -215,9 +215,6 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
       tree.push(node7)
       puts heap_prop.inspect
 
-      tree.push(node8)
-      puts heap_prop.inspect
-
       expect(heap_prop.peek[:value]).to eq(70)
     end
 

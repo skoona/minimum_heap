@@ -305,7 +305,7 @@ module Heaps
       unless node == new_node
         dlog "#{__method__} (Ix) Node => #{node.to_s},  node.parent.valid? => #{node.parent.valid?}"
         dlog "#{__method__} (Ix) Node => #{node.to_s},  node.parent.right.valid? => #{node.parent.right.valid?}"
-        dlog "#{__method__} (Ix) Node => #{node.to_s},  node.parent.right => #{node.parent.right.to_s}"
+        dlog "#{__method__} (Ix) Node => #{node.to_s},  node.parent.right == node => #{node.parent.right == node}"
 
         count = 0
         while node.parent.valid? &&
