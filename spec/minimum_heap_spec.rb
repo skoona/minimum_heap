@@ -59,7 +59,92 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
     it "initializes with a simple params" do
       expect(described_class.new(["Star Trek: Next Generation", 102])).to be
     end
-    
+
+    it "tree can enable the debug log" do
+      tree.instance_variable_set(:@debug, true)
+      expect{tree.pop}.to output(/Removing Node/).to_stdout
+      tree.instance_variable_set(:@debug, false)
+      expect{tree.pop}.to_not output(/Removing Node/).to_stdout
+    end
+
+  end
+
+  context "Cover BaseNode " do
+    before :each do
+      @base = Heaps::BaseNode.new("Star Trek: Next Generation", 102)
+    end
+
+    it "BaseNode initializes" do
+      expect(@base).to be
+    end
+
+    it "#label returns a value" do
+      expect(@base.label).to be_a(String)
+    end
+
+    it "#value returns a value" do
+      expect(@base.value).to be_a(Integer)
+    end
+
+    it "#valid? returns a value" do
+      expect(@base.valid?).to be true
+    end
+
+    it "#to_s returns a value" do
+      expect(@base.to_s).to be_a(Hash)
+    end
+
+    it "#inspect returns a value" do
+      expect(@base.inspect).to be_a(String)
+    end
+  end
+
+  context "Cover EmptyNode " do
+    before :each do
+      @enode = Heaps::EmptyNode.new("Star Trek: Next Generation", 102)
+    end
+
+    it "EmptyNode initializes" do
+      expect(@enode).to be
+    end
+
+    it "#left returns false" do
+      expect(@enode.left).to be false
+    end
+
+    it "#right returns false" do
+      expect(@enode.right).to be false
+    end
+
+    it "#parent returns false" do
+      expect(@enode.parent).to be false
+    end
+
+    it "#insert_node returns false" do
+      expect(@enode.insert_node).to be false
+    end
+
+    it "#dfs_pre_order returns an empty array" do
+      expect(@enode.dfs_pre_order).to be_a(Array)
+    end
+  end
+
+  context "Cover Node " do
+    before :each do
+      @node = Heaps::Node.new("Star Trek: Next Generation", 102)
+    end
+
+    it "Node initializes" do
+      expect(@node).to be
+    end
+
+    it "#<=> will detect equal" do
+      expect(@node <=> @node).to eq(0)
+    end
+
+    it "#< will detect less than" do
+      expect(@node < @node).to be false
+    end
   end
 
   context "Insert User Data " do

@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{Minimal Heap pattern.}
   spec.description   = %q{A min-heap is a binary tree data structure in which the data of each node is less than or equal to the data of that node’s children and the tree is complete.}
-  spec.homepage      = ""
+  spec.homepage      = "https://skoona.github.io"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'

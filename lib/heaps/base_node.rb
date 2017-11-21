@@ -25,52 +25,12 @@ module Heaps
       {label: label.dup, value: value.dup}
     end
 
-    def data=(other_hash)
-      self.label = other_hash[:label]
-      self.value = other_hash[:value]
-      nil
-    end
-
-
-    ##
-    # Optional
-    ##
-
     def to_s
       data
     end
 
     def inspect
       "{#{value}:#{left.inspect}|#{right.inspect}}"
-    end
-
-    def <=>(other)
-      if value > other.value
-        1
-      elsif value < other.value
-        -1
-      elsif value == other.value
-        0
-      else
-        nil
-      end
-    end
-
-    def <(other)
-      (self <=> other) < 0
-    end
-
-    def >(other)
-      (self <=> other) > 0
-    end
-
-    def ==(other)
-      self.class === other and hash == other.hash
-    end
-    alias_method  :eql?, :==
-
-    def hash
-      label.hash ^ value.hash # XOR
     end
 
   end

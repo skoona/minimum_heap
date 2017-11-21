@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    heaps (0.9.1)
+    heaps (0.9.2)
 
 GEM
   remote: https://rubygems.org/

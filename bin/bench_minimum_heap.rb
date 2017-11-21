@@ -51,8 +51,8 @@ Benchmark.ips do |x|
   x.config(:suite => suite)
 
   source_data = []
-  1000.times do |inc|
-    data = ["Title Number #{inc}", 1000 - inc]
+  500.times do |inc|
+    data = ["Title Number #{inc}", 500 - inc]
     inc.even? ? source_data.push(data) : source_data.unshift(data)
   end
   
@@ -61,8 +61,8 @@ Benchmark.ips do |x|
     source_nodes << Heaps::Node.new(parms.first, parms.last) 
   end
 
-  a_heap = Heaps::MinimumHeap.new(source_data[0..499])
-  b_heap = Heaps::MinimumHeap.new(source_data[500..999])
+  a_heap = Heaps::MinimumHeap.new(source_data[0..249])
+  b_heap = Heaps::MinimumHeap.new(source_data[250..499])
 
   x.report('Array') do
     catcher_array = Array.new
@@ -73,7 +73,7 @@ Benchmark.ips do |x|
 
   x.report('MinimumHeap') do
     nodes_heap = []
-    o = b_heap.merge(a_heap)    
+    o = b_heap.merge(a_heap)
     while !o.empty? do
       nodes_heap << o.pop
     end

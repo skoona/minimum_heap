@@ -56,22 +56,18 @@ module Heaps
       nleft = nil
       nright = nil
 
-
       if left.valid? and self > left                 # Must be more than parent:
         swap_contents(left)
       end
 
-      if right.valid? and self > right              # Must be more than parent:
-        swap_contents(right)
+      if right.valid? and left > right              # Must be more than parent:
+        left.swap_contents(right)
       end
-      maintain_child_property(self)
 
       nleft  = left.move_down  if left.valid?
       nright = right.move_down if right.valid?
 
-      maintain_child_property(self)
-
-      nright || nleft || self
+      nright || nleft || self                      # side effect: Returns Last Inserted Node
     end
 
     def swap_contents(node)
@@ -105,7 +101,7 @@ module Heaps
     # Use PreOrder method to search Tree
     # - Supporting #to_a
     # https://medium.freecodecamp.org/all-you-need-to-know-about-tree-data-structures-bceacb85490c
-    def dfs_pre_order(collector)
+    def dfs_pre_order(collector=[])
       collector << data
 
       if left.valid?
@@ -156,20 +152,6 @@ module Heaps
     end
 
   private
-
-    # The left child must be smaller than the right child,
-    # - and both must be greater than the parent
-    def maintain_child_property(node)
-      return node unless node.valid? and
-                         node.left.valid? and
-                         node.right.valid?      # nothing to balance
-
-      if node.left > node.right
-        node = node.right.swap_contents(node.left)
-      end
-
-      node
-    end
 
     def insert_left(node)
       self.left = node

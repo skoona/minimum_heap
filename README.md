@@ -194,6 +194,14 @@ Removing Node: {:label=>"Star Trek: Star Trek", :value=>99}
 
 [34] pry(main)>
 
+##
+# Run Tests
+##
+$ bundle exec rspec
+$ open docs/rspec.html
+$ open coverage/index.html
+$ bin/bench_minimum_heap
+$ bin/nodes
 
  Ref: http://www.geeksforgeeks.org/tree-traversals-inorder-preorder-and-postorder/
    Depth First Traversals:

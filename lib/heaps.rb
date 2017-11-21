@@ -128,7 +128,7 @@ module Heaps
       node = valid_node( user_data)
       return nil if node.nil?
 
-      unless root.valid?
+      unless root.nil? or root.valid?
         @root = node
         @size = 1
         dlog "#{__method__} Inserted at R/C/mR/cT => #{insert_positions}, Root.Node => #{node.to_s}, Node.Parent => #{node.parent.to_s}"
@@ -235,11 +235,11 @@ module Heaps
     alias_method :to_s, :inspect
 
     def to_a
-      @root.dfs_pre_order([])
+      @root.dfs_pre_order
     end
 
     def display(node=@root)
-      node.dfs_pre_order([]).each do |item|
+      node.dfs_pre_order.each do |item|
         dlog item
       end
     end
@@ -282,11 +282,8 @@ module Heaps
       if @last_node.valid? and @last_node.parent.valid? and pcol != 1
         nav_node = @last_node.parent
 
-      else
-        if prow > 1 && ( pcol > (pmax / 2.0).ceil )      # Choose sides earlier, but only once
-          nav_node = nav_node.right                      # left is automatic/default
-          row += 1
-        end
+      else # used to find column 1 on row changes
+        dlog("#{__method__} Column Calcs: #{( pcol > (pmax / 2.0).ceil )}, Row: #{prow}, pCol: #{pcol}, pMax: #{pmax}, Ceil: #{(pmax / 2.0).ceil}")
 
         while prow > row  do                             # position to target row
           nav_node = nav_node.left
@@ -366,14 +363,8 @@ module Heaps
                       node.parent.left.valid? and
                         node.parent.right.valid?  # nothing to balance
 
-      if node.parent.left == node
-        if node > node.parent.right
-          node = node.swap_contents(node.parent.right)
-        end
-      else
-        if node.parent.left > node
-          node = node.parent.left.swap_contents(node)
-        end
+      if node.parent.left != node && node.parent.left > node
+        node = node.parent.left.swap_contents(node)
       end
 
       node
@@ -417,7 +408,3 @@ module Heaps
   end
 end
 
-
-# {70:{72:{80:{91:{102:{}|{}}|{}}|{92:{}|{}}}|{85:{93:{98:{}|{}}|{99:{}|{}}}|{94:{100:{}|{}}|{101:{}|{}}}}}|{78:{86:{}|{}}|{90:{}|{}}}}
-
-# {70:{72:{80:{91:{102:{}|{}}|{}}|{92:{}|{}}}|{85:{93:{98:{}|{}}|{99:{}|{}}}|{94:{100:{}|{}}|{101:{}|{}}}}}|{78:{86:{}|{}}|{90:{}|{}}}}
