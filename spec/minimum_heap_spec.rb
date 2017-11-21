@@ -22,7 +22,7 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
   let (:node15) { ["Star Trek: Next Generation", 102] }
 
   let (:tree) { described_class.new(root) }
-  let (:heap_prop) { heap_prop = described_class.new(node3, node4, node5, node11, root, node1) }
+  let (:heap_prop) { heap_prop = described_class.new([node3, node4, node5, node11, root, node1]) }
 
   context "Initialization " do
     it "has a version number" do
@@ -37,8 +37,8 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
       expect(described_class.new(root)).to be
     end
 
-    it "initializes with param list of values" do
-      expect(described_class.new(root, node1, node2, node3, node4)).to be
+    it "fails initialization via param list of values" do
+      expect{described_class.new(root, node1, node2, node3, node4)}.to raise_error(ArgumentError)
     end
 
     it "initializes with array of values" do
@@ -50,6 +50,16 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
       hash_ary = [root, node1, node2, node3, node4].map {|x| {label: x.first, value: x.last} }
       expect(described_class.new(hash_ary)).to be
     end
+
+    it "initializes with array of Nodes" do
+      node_ary = [root, node1, node2, node3, node4].map {|x| Heaps::Node.new(x.first, x.last) }
+      expect(described_class.new(node_ary)).to be
+    end
+
+    it "initializes with a simple params" do
+      expect(described_class.new(["Star Trek: Next Generation", 102])).to be
+    end
+    
   end
 
   context "Insert User Data " do
@@ -72,7 +82,6 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
       tree.push(node15)
       exp_out = '{70:{72:{80:{91:{102:{}|{}}|{}}|{92:{}|{}}}|{85:{93:{}|{}}|{94:{}|{}}}}|{78:{86:{98:{}|{}}|{99:{}|{}}}|{90:{100:{}|{}}|{101:{}|{}}}}}'
       expect(tree.inspect).to eq(exp_out)
-      puts tree.inspect
     end
 
     it "#push maintains Heap Property across complete and balanced tree: unstructured." do
@@ -93,7 +102,6 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
       tree.push(node8)
       exp_out = '{70:{72:{78:{92:{98:{}|{}}|{}}|{102:{}|{}}}|{80:{93:{}|{}}|{99:{}|{}}}}|{85:{86:{94:{}|{}}|{100:{}|{}}}|{90:{91:{}|{}}|{101:{}|{}}}}}'
       expect(tree.inspect).to eq(exp_out)
-      puts tree.inspect
     end
 
   end
@@ -119,13 +127,16 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
       heap_prop.push(node1)
       puts heap_prop.inspect
 
-      # puts heap_prop.inspect
+      tree.push(node7)
+      puts heap_prop.inspect
+
+      tree.push(node8)
+      puts heap_prop.inspect
+
       expect(heap_prop.peek[:value]).to eq(70)
     end
 
     it "#maintains Heap Property for nodes removed." do
-      puts heap_prop.inspect
-
       expect(heap_prop.peek[:value]).to eq(70)
       expect(heap_prop.last_node.value).to eq(86)
       expect(heap_prop.size).to eq(6)
@@ -135,8 +146,6 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
       expect(heap_prop.peek[:value]).to eq(72)
       expect(heap_prop.last_node.value).to eq(86)
       expect(heap_prop.size).to eq(5)
-
-      puts heap_prop.inspect
     end
 
     it "#pop remove nodes in ascending order" do
@@ -149,8 +158,6 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
     end
 
     it "#replace! removes root node and immediately replaces it with this new node" do
-      puts heap_prop.inspect
-
       expect(heap_prop.peek[:value]).to eq(70)
       expect(heap_prop.last_node.value).to eq(86)
       expect(heap_prop.size).to eq(6)
@@ -160,13 +167,9 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
       expect(heap_prop.peek[:value]).to eq(72)
       expect(heap_prop.last_node.value).to eq(102)
       expect(heap_prop.size).to eq(6)
-
-      puts heap_prop.inspect
     end
 
     it "#clear! removes all nodes in heap" do
-      puts heap_prop.inspect
-
       expect(heap_prop.peek[:value]).to eq(70)
       expect(heap_prop.last_node.value).to eq(86)
       expect(heap_prop.size).to eq(6)
@@ -176,24 +179,16 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
 
       expect(heap_prop.empty?).to be true
       expect(heap_prop.size).to eq(0)
-
-      puts heap_prop.inspect
     end
 
     it "#include? finds requested node from array, hash, or node input. " do
-      puts heap_prop.inspect
-
       expect(heap_prop.include?(["Mad Max 2: The Road Warrior", 98], true)).to be_a(Heaps::Node)
       expect(heap_prop.include?({:label=>"Mad Max 2: The Road Warrior", :value=>98}, true)).to be_a(Heaps::Node)
       expect(heap_prop.include?(node11, true)).to be_a(Heaps::Node)
       expect(heap_prop.include?(node11)).to eq({:label=>"Mad Max 2: The Road Warrior", :value=>98})
-
-      puts heap_prop.inspect
     end
 
     it "#delete! removes node matching input user_data. " do
-      puts heap_prop.inspect
-
       expect(heap_prop.peek[:value]).to eq(70)
       expect(heap_prop.last_node.value).to eq(86)
       expect(heap_prop.size).to eq(6)
@@ -203,8 +198,6 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
       expect(heap_prop.peek[:value]).to eq(70)
       expect(heap_prop.last_node.value).to eq(86)
       expect(heap_prop.size).to eq(5)
-
-      puts heap_prop.inspect
     end
 
   end
@@ -213,7 +206,7 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
 
     it "#merge returns a new heap composed of this heap and other. " do
       hp1 = described_class.new([root, node1, node2, node3, node4])
-      hp2 = described_class.new(node4, node5, node6, node7, node8)
+      hp2 = described_class.new([node4, node5, node6, node7, node8])
       hp1_size = hp1.size
       hp2_size = hp2.size
 
@@ -228,7 +221,7 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
 
     it "#merge! returns this heap after consuming other. " do
       hp1 = described_class.new([root, node1, node2, node3, node4])
-      hp2 = described_class.new(node4, node5, node6, node7, node8)
+      hp2 = described_class.new([node4, node5, node6, node7, node8])
       hp1_size = hp1.size
       hp2_size = hp2.size
 
@@ -241,8 +234,8 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
     end
 
     it "#union returns new heap composed of this and other, destroying both source heaps. " do
-      hp1 = described_class.new(root, node1)
-      hp2 = described_class.new(node4, node5)
+      hp1 = described_class.new([root, node1])
+      hp2 = described_class.new([node4, node5])
       hp1_size = hp1.size
       hp2_size = hp2.size
 
@@ -258,15 +251,17 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
     end
 
     it "#to_a returns and array representing the current Minimum Heap. " do
-      puts heap_prop.inspect
       expect(heap_prop.to_a).to match_array [{:label=>"The Matrix", :value=>70}, {:label=>"Pacific Rim", :value=>72}, {:label=>"Star Wars: Return of the Jedi", :value=>80}, {:label=>"Donnie Darko", :value=>85}, {:label=>"Inception", :value=>86}, {:label=>"Mad Max 2: The Road Warrior", :value=>98}]
     end
 
     it "#display prints the user data of each node in the current Minimum Heap. " do
-      puts heap_prop.inspect
       expect(heap_prop.display).to match_array [{:label=>"The Matrix", :value=>70}, {:label=>"Pacific Rim", :value=>72}, {:label=>"Star Wars: Return of the Jedi", :value=>80}, {:label=>"Donnie Darko", :value=>85}, {:label=>"Inception", :value=>86}, {:label=>"Mad Max 2: The Road Warrior", :value=>98}]
     end
 
   end
 
 end
+
+# {:label=>"Mad Max 2: The Road Warrior", :value=>98}, {:label=>"Pacific Rim", :value=>72}, {:label=>"Star Wars: Return of the Jedi", :value=>80}, {:label=>"Donnie Darko", :value=>85}, {:label=>"The Matrix", :value=>70}, {:label=>"Inception", :value=>86}
+
+# {:label=>"Star Trek: Next Generation", :value=>102}, {:label=>"The Matrix", :value=>70}, {:label=>"Pacific Rim", :value=>72}, {:label=>"Star Wars: Return of the Jedi", :value=>80}, {:label=>"Mad Max 2: The Road Warrior", :value=>98}, {:label=>"The Shawshank Redemption", :value=>91}, {:label=>"Donnie Darko", :value=>85}, {:label=>"Star Wars: A New Hope", :value=>93}, {:label=>"Star Wars: The Empire Strikes Back", :value=>94}, {:label=>"Braveheart", :value=>78}, {:label=>"Inception", :value=>86}, {:label=>"Star Trek: Voyager", :value=>100}, {:label=>"Star Trek: Star Trek", :value=>99}, {:label=>"District 9", :value=>90}, {:label=>"Star Trek: Deep Space 9", :value=>101}, {:label=>"The Martian", :value=>92}

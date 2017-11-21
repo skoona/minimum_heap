@@ -69,7 +69,7 @@ module Heaps
       "{}"
     end
 
-    def to_a
+    def dfs_pre_order(*)
       []
     end
 

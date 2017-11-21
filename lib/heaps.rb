@@ -81,13 +81,14 @@
 #   sift-down:
 #     move a node down in the tree, similar to sift-up; used to restore heap condition after deletion or replacement.
 ##
-
+# best Reference: https://medium.freecodecamp.org/all-you-need-to-know-about-tree-data-structures-bceacb85490c
+##
 
 
 require "heaps/version"
 require "heaps/empty_node"
 require "heaps/node"
-
+require "heaps/base_node"
 
 module Heaps
 
@@ -98,29 +99,23 @@ module Heaps
     ##
     # Class Creates
     ##
-    def self.heapify(*user_datas_ary)
-      new(*user_datas_ary)
+    def self.heapify(user_datas_ary)
+      new(user_datas_ary)
     end
 
     # Presumed input - one or more: [['label', value],...] | [{label: 'label', value: value},...]
-    def initialize(*args)
+    def initialize(args=[])
       @size = 0
       @root = Heaps::EmptyNode.new
       @last_node = @root
       @debug = false
 
       unless args.empty?
-        case args.first.first
-          when Heaps::Node
-            args.first.each {|udata| push( udata ) }
-          when Array
-            args.first.each {|udata| push( udata ) }
-          when Hash
-            args.first.each {|udata| push( udata ) }
+        case args.first
           when String
-            args.each {|udata| push( udata ) }
-          else
             push( args )
+          else
+            args.each {|udata| push( udata ) }
         end
       end
       true
@@ -133,18 +128,18 @@ module Heaps
       node = valid_node( user_data)
       return nil if node.nil?
 
-      if !root.valid? and @size == 0
+      unless root.valid?
         @root = node
-        @size += 1
+        @size = 1
         dlog "#{__method__} Inserted at R/C/mR/cT => #{insert_positions}, Root.Node => #{node.to_s}, Node.Parent => #{node.parent.to_s}"
+        @last_node = @root
         return nil
       end
 
-      unless node.nil? || node.left.nil? || node.right.nil?
-        @size += 1
-        node = insert_node( node)
-        dlog "#{__method__} Inserted at R/C/mR/cT => #{insert_positions}, Node => #{node.to_s}, Node.Parent => #{node.parent.to_s}"
-      end
+      @size += 1
+      node = insert_node( node)
+      dlog "#{__method__} Inserted at R/C/mR/cT => #{insert_positions}, Node => #{node.to_s}, Node.Parent => #{node.parent.to_s}"
+
       nil
     end
     alias_method :<<, :push
@@ -240,11 +235,11 @@ module Heaps
     alias_method :to_s, :inspect
 
     def to_a
-      @root.to_a
+      @root.dfs_pre_order([])
     end
 
     def display(node=@root)
-      node.to_a.each do |item|
+      node.dfs_pre_order([]).each do |item|
         dlog item
       end
     end
@@ -258,7 +253,7 @@ module Heaps
     def valid_node(user_data)
       case user_data
         when Array
-          Heaps::Node.new( *user_data)
+          Heaps::Node.new( user_data.first, user_data.last)
         when Hash
           Heaps::Node.new(user_data[:label], user_data[:value])
         when Heaps::Node
@@ -282,42 +277,64 @@ module Heaps
     def insert_node(this_node)
       row = 1
       nav_node = root
-
       prow, pcol, pmax, pcap = insert_positions
 
-      while prow > row  do                             # position to target row
-        nav_node = nav_node.left
-        row += 1
+      if @last_node.valid? and @last_node.parent.valid? and pcol != 1
+        nav_node = @last_node.parent
+
+      else
+        if prow > 1 && ( pcol > (pmax / 2.0).ceil )      # Choose sides earlier, but only once
+          nav_node = nav_node.right                      # left is automatic/default
+          row += 1
+        end
+
+        while prow > row  do                             # position to target row
+          nav_node = nav_node.left
+          row += 1
+        end
       end
-    
-      row_wise_insert(nav_node, this_node) 
+
+      @last_node = row_wise_insert(nav_node, this_node)
 
       maintain_heap_property(this_node)
     end
     
     # Row Wise Insertions
     def row_wise_insert(snode, new_node)
-      return new_node if snode.nil?
-      
+      dlog "#{__method__} (Top) Node => #{snode.to_s}, New.Node => #{new_node.to_s}"
+
       node = snode.insert_node( new_node )
-      if node == new_node
-        @last_node = node
-        
-      elsif node != new_node
+
+      unless node == new_node
+        dlog "#{__method__} (Ix) Node => #{node.to_s},  node.parent.valid? => #{node.parent.valid?}"
+        dlog "#{__method__} (Ix) Node => #{node.to_s},  node.parent.right.valid? => #{node.parent.right.valid?}"
+        dlog "#{__method__} (Ix) Node => #{node.to_s},  node.parent.right => #{node.parent.right.to_s}"
+
         count = 0
-        while node.parent.right == node do     # walk up to find path to right column
+        while node.parent.valid? &&
+                node.parent.right.valid? &&
+                  node.parent.right == node do     # walk up to find path to right column
           node = node.parent
           count += 1
+          dlog "#{__method__} (I0) Node => #{node.to_s}, Node.Parent.Right => #{node.parent.right.to_s}"
         end
-        node = node.parent.right               # move into right column
-        while count > 0 && node.left.valid? do # walk down to row
+
+        dlog(root.inspect)
+
+        node = node.parent.right                   # Turn the corner
+
+        dlog "#{__method__} (I1) Count: #{count}, Node => #{node.to_s}, New.Node => #{new_node.to_s}"
+
+        while count > 0 && node.left.valid? do     # walk down to row
           node = node.left
           count -= 1
         end
 
+        dlog "#{__method__} (I2) Node => #{node.to_s}, New.Node => #{new_node.to_s}"
         node = row_wise_insert( node , new_node )
       end
 
+      dlog "#{__method__} (Exit) Last.Node => #{node.to_s}, New.Node => #{new_node.to_s}, Tree => #{root.inspect}"
       node
     end
 
@@ -392,8 +409,15 @@ module Heaps
     end
 
     def dlog(msg)
-      puts msg if @debug
+      return nil unless @debug
+      puts msg
+      nil
     end
 
   end
 end
+
+
+# {70:{72:{80:{91:{102:{}|{}}|{}}|{92:{}|{}}}|{85:{93:{98:{}|{}}|{99:{}|{}}}|{94:{100:{}|{}}|{101:{}|{}}}}}|{78:{86:{}|{}}|{90:{}|{}}}}
+
+# {70:{72:{80:{91:{102:{}|{}}|{}}|{92:{}|{}}}|{85:{93:{98:{}|{}}|{99:{}|{}}}|{94:{100:{}|{}}|{101:{}|{}}}}}|{78:{86:{}|{}}|{90:{}|{}}}}

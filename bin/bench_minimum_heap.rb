@@ -33,33 +33,36 @@ class GCSuite
 end
 
 suite = GCSuite.new
-
-# Warming up --------------------------------------
-#                Array    81.000  i/100ms
-#          MinimumHeap     1.000  i/100ms
-# Calculating -------------------------------------
-#                Array    815.959  (± 2.2%) i/s -      4.131k in   5.065284s
-#          MinimumHeap      0.965  (± 0.0%) i/s -      5.000  in   5.270911s
+##
+# Warming up     --------------------------------------
+#        Array    56.000  i/100ms
+#  MinimumHeap     1.000  i/100ms
+#
+# Calculating    -------------------------------------
+#       Array    551.058  (± 6.9%) i/s -      2.744k in   5.004109s
+# MinimumHeap      1.944  (± 0.0%) i/s -     10.000  in   5.273235s
 #
 # Comparison:
-#                Array:      816.0 i/s
-#          MinimumHeap:        1.0 i/s - 845.29x  slower
-#
+#       Array:      551.1 i/s
+# MinimumHeap:        1.9 i/s - 283.50x  slower
+##
 
 Benchmark.ips do |x|
   x.config(:suite => suite)
 
   source_data = []
   1000.times do |inc|
-    source_data << ["Title Number #{inc}", 1000 - inc] 
+    data = ["Title Number #{inc}", 1000 - inc]
+    inc.even? ? source_data.push(data) : source_data.unshift(data)
   end
   
   source_nodes = []
   source_data.each do |parms|
     source_nodes << Heaps::Node.new(parms.first, parms.last) 
   end
+
   a_heap = Heaps::MinimumHeap.new(source_data[0..499])
-  b_heap = Heaps::MinimumHeap.new(source_data[500.999])
+  b_heap = Heaps::MinimumHeap.new(source_data[500..999])
 
   x.report('Array') do
     catcher_array = []
@@ -75,6 +78,7 @@ Benchmark.ips do |x|
       nodes_heap << o.pop
     end
   end
+
 
   x.compare!
 end

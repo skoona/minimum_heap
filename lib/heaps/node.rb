@@ -17,7 +17,7 @@ module Heaps
     end
 
     def valid?
-      true
+      @value != nil
     end
 
     def data
@@ -29,17 +29,15 @@ module Heaps
       self.value = other_hash[:value]
       nil
     end
-
+        
     # Returns self(found matching node) or nil
     def include?(other_node)
       (label == other_node.label && value == other_node.value ? self : nil) ||
-          (left.valid? ? left.include?(other_node) : nil) ||
-          (right.valid? ? right.include?(other_node) : nil)
+          left.include?(other_node) || right.include?(other_node)
     end
 
     # Insert here
     def insert_node(node)
-      return node if left.nil? || right.nil?
       if left.valid?
         if right.valid?
           self
@@ -104,16 +102,28 @@ module Heaps
       self
     end
 
+    # Use PreOrder method to search Tree
+    # - Supporting #to_a
+    # https://medium.freecodecamp.org/all-you-need-to-know-about-tree-data-structures-bceacb85490c
+    def dfs_pre_order(collector)
+      collector << data
+
+      if left.valid?
+        left.dfs_pre_order(collector)
+      end
+      if right.valid?
+        right.dfs_pre_order(collector)
+      end
+      
+      collector
+    end
+
     def to_s
       data
     end
 
     def inspect
       "{#{value}:#{left.inspect}|#{right.inspect}}"
-    end
-
-    def to_a
-      left.to_a + [data] + right.to_a
     end
 
     def <=>(other)
