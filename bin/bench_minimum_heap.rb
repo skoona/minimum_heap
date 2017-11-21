@@ -34,17 +34,19 @@ end
 
 suite = GCSuite.new
 ##
-# Warming up     --------------------------------------
-#        Array    56.000  i/100ms
-#  MinimumHeap     1.000  i/100ms
-#
-# Calculating    -------------------------------------
-#       Array    551.058  (± 6.9%) i/s -      2.744k in   5.004109s
-# MinimumHeap      1.944  (± 0.0%) i/s -     10.000  in   5.273235s
+# Warming up --------------------------------------
+#             Array Ary     5.000  i/100ms
+#       MinimumHeap Ary     5.000  i/100ms
+#      MinimumHeap Node     4.000  i/100ms
+# Calculating -------------------------------------
+#             Array Ary     59.096  (± 1.7%) i/s -    300.000  in   5.078510s
+#       MinimumHeap Ary     42.484  (±23.5%) i/s -    205.000  in   5.080024s
+#      MinimumHeap Node     47.296  (±42.3%) i/s -    196.000  in   5.055961s
 #
 # Comparison:
-#       Array:      551.1 i/s
-# MinimumHeap:        1.9 i/s - 283.50x  slower
+#          Array Ary:       59.1 i/s
+#   MinimumHeap Node:       47.3 i/s - same-ish: difference falls within error
+#    MinimumHeap Ary:       42.5 i/s - 1.39x  slower
 ##
 
 Benchmark.ips do |x|
@@ -61,24 +63,31 @@ Benchmark.ips do |x|
     source_nodes << Heaps::Node.new(parms.first, parms.last) 
   end
 
-  a_heap = Heaps::MinimumHeap.new(source_data[0..249])
-  b_heap = Heaps::MinimumHeap.new(source_data[250..499])
+  # Compose a balanced workload of 125 items from the internal group of 500
+  # Gather search items from front and tail, with some not-findables
 
-  x.report('Array') do
-    catcher_array = Array.new
-    source_data.each {|y| catcher_array << y} # load each
-    catcher_array.sort {|a, b| a.last <=> b.last }
-    catcher_array.clear
-  end
+  searchable = source_data[350..449] + source_data[50..99] + source_data[250..274].each {|n| n[1] *= 2 }
+  searchnodes = source_nodes[350..449] + source_nodes[50..99] + source_nodes[250..274].each {|n| n.value *= 2 }
 
-  x.report('MinimumHeap') do
-    nodes_heap = []
-    o = b_heap.merge(a_heap)
-    while !o.empty? do
-      nodes_heap << o.pop
+  heap = Heaps::MinimumHeap.new(source_nodes)
+
+  x.report('Array Ary') do
+    searchable.each do |sa|
+      source_data.include?(sa)
     end
   end
 
+  x.report('MinimumHeap Ary') do
+    searchable.each do |sa|
+      heap.include?(sa, true)
+    end
+  end
 
+  x.report('MinimumHeap Node') do
+    searchnodes.each do |nd|
+      heap.include?(nd, true)
+    end
+  end
+  
   x.compare!
 end
