@@ -88,6 +88,6 @@ Benchmark.ips do |x|
       heap.include?(nd, true)
     end
   end
-  
+
   x.compare!
 end

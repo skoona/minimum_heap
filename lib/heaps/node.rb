@@ -60,7 +60,7 @@ module Heaps
         swap_contents(left)
       end
 
-      if right.valid? and left > right              # Must be more than parent:
+      if right.valid? and left > right              # Must be less than right child:
         left.swap_contents(right)
       end
 

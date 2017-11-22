@@ -4,86 +4,10 @@
 
 # A min-heap is a binary tree data structure in which the data of each node is less than or
 # equal to the data of that node’s children and the tree is complete.
-
-# - All child nodes are larger than their parent
-# - The smallest element of the min-heap is at the root
-# - The left child of a parent is less than the right child of same parent
-
-# Ref: https://en.wikipedia.org/wiki/Heap_(data_structure)
-# Ref: https://en.wikibooks.org/wiki/Data_Structures/Min_and_Max_Heaps
-
-# A heap is an efficient semi-ordered data structure for storing a collection of orderable data. A min-heap
-# supports two operations:
 #
-#    INSERT(heap, element)
-#    element REMOVE_MIN(heap)
-#
-# ( There's no real difference between min and max heaps, except how the comparison is interpreted. )
-#
-# Although different types of heaps exist. The term binary heap and heap are interchangeable in
-# most cases. A heap can be thought of as a tree with parent and child. The main difference
-# between a heap and a binary tree is the heap property.  In order for a data structure to be
-# considered a heap, it must satisfy the following condition (heap property):
-#
-#    If A and B are elements in the heap and B is a child of A, then key(A) ≤ key(B).
-#    (This property applies for a min-heap. A max heap would have the comparison reversed).
-
-#     What this tells us is that the minimum key will always remain at the top and greater
-#     values will be below it. Due to this fact, heaps are used to implement priority queues
-#     which allows quick access to the item with the most priority. Here's an example of a min-heap:
-#
-#   [Minimal-Heap](https://upload.wikimedia.org/wikipedia/commons/5/5c/Binary-heap.png)
-#
-# Operations[edit]
-# The common operations involving heaps are:
-#
-# Basic
-# ---------
-#   find-max or find-min:
-#     find a maximum item of a max-heap, or a minimum item of a min-heap, respectively (a.k.a. peek)
-#   insert:
-#     adding a new key to the heap (a.k.a., push[3])
-#   extract-max [or extract-min]:
-#     returns the node of maximum value from a max heap [or minimum value from a min heap] after
-#     removing it from the heap (a.k.a., pop[4])
-#   delete-max [or delete-min]:
-#     removing any node of a max heap [or min heap], respectively
-#   replace:
-#     pop root and push a new key. More efficient than pop followed by push, since only need
-#     to balance once, not twice, and appropriate for fixed-size heaps.
-#
-# Creation
-# ---------
-#   create-heap: (new)
-#     create an empty heap
-#   heapify:
-#     create a heap out of given array of elements
-#   merge (union):
-#     joining two heaps to form a valid new heap containing all the elements of both, preserving the original heaps.
-#   merge!
-#     joining two heaps to form a valid new heap containing all the elements of both, destroying the original heaps.
-#
-# Inspection
-# ---------
-#   size:
-#     return the number of items in the heap.
-#   is-empty:
-#     return true if the heap is empty, false otherwise.
-#
-# Internal
-# ---------
-#   increase-key or decrease-key:
-#     updating a key within a max- or min-heap, respectively
-#   delete:
-#     delete an arbitrary node (followed by moving last node and sifting to maintain heap)
-#   sift-up:
-#     move a node up in the tree, as long as needed; used to restore heap condition after insertion. Called "sift" because node moves up the tree until it reaches the correct level, as in a sieve.
-#   sift-down:
-#     move a node down in the tree, similar to sift-up; used to restore heap condition after deletion or replacement.
 ##
 # best Reference: https://medium.freecodecamp.org/all-you-need-to-know-about-tree-data-structures-bceacb85490c
 ##
-
 
 require "heaps/version"
 require "heaps/empty_node"
@@ -139,7 +63,6 @@ module Heaps
       @size += 1
       node = insert_node( node)
       dlog "#{__method__} Inserted at R/C/mR/cT => #{insert_positions}, Node => #{node.to_s}, Node.Parent => #{node.parent.to_s}"
-
       nil
     end
     alias_method :<<, :push

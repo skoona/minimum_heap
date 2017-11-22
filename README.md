@@ -1,25 +1,52 @@
-# Heaps
+# Minimum Heap
 
-#### A min-heap is a binary tree data structure in which the data of each node is less than or equal to the data of that node’s children and the tree is complete.
+A Minimum Heap is a binary tree data structure in which the data of each node is less than or equal to the data of that node’s children and the tree is complete.
+
+Heaps are an efficient semi-ordered data structure for storing a collection of orderable data. The term binary heap
+and heap are interchangeable in most cases. A heap can be thought of as a tree with parent and child. The main
+difference between a heap and a binary tree is the heap property. In order for a data structure to be considered
+a heap, it must satisfy the following condition ```heap property```:
+
+* If A and B are elements in the heap and B is a child of A, then key(A) ≤ key(B).
+![Minimal-Heap](https://upload.wikimedia.org/wikipedia/commons/5/5c/Binary-heap.png)
+
+    Description: Example of a complete binary min heap
+        Date	8 December 2010
+        Author	Ermishin
 
 #### Required Behaviors
 
 A Binary Heap is a Binary Tree with following properties.
-1) It’s a complete tree (All levels are completely filled except possibly the last level and the last level has all keys as left as possible). This property of Binary Heap makes them suitable to be stored in an array.
-2) A Binary Heap is either Min Heap or Max Heap. In a Min Binary Heap, the key at root must be minimum among all keys present in Binary Heap. The same property must be recursively true for all nodes in Binary Tree. Max Binary Heap is similar to Min Heap.
 
-3) All child nodes are larger than their parent
-4) The smallest element of the min-heap is at the root
-5) The left child of a parent is less than the right child of same parent
+* It’s a complete tree (All levels are completely filled except possibly the last level and the last level has all keys as left as possible). This property of Binary Heap makes them suitable to be stored in an array.
+* A Binary Heap is either Min Heap or Max Heap. In a Min Binary Heap, the key at root must be minimum among all keys present in Binary Heap. The same property must be recursively true for all nodes in Binary Tree. Max Binary Heap is similar to Min Heap.
+* All child nodes are larger than their parent
+* The smallest element of the min-heap is at the root
+* The left child of a parent is less than the right child of same parent
 
+Ref: https://medium.freecodecamp.org/all-you-need-to-know-about-tree-data-structures-bceacb85490c
 Ref: http://www.geeksforgeeks.org/binary-heap/
 Ref: https://en.wikipedia.org/wiki/Heap_(data_structure)
 Ref: https://en.wikibooks.org/wiki/Data_Structures/Min_and_Max_Heaps
+Ref: http://www.geeksforgeeks.org/tree-traversals-inorder-preorder-and-postorder/
+Ref: http://www.geeksforgeeks.org/how-to-determine-if-a-binary-tree-is-balanced/
+Ref: http://www.geeksforgeeks.org/?p=2686
 
-To experiment with this code, execute `bin/console` for an interactive prompt.
+
+    Depth First Traversals:
+      (a) Inorder   (Left, Root, Right) : 4 2 5 1 3
+      (b) Preorder  (Root, Left, Right) : 1 2 4 5 3
+      (c) Postorder (Left, Right, Root) : 4 5 2 3 1
+    Breadth First Traversals (By Level) : 1 2 3 4 5
+
+### Observations
+* The implied `ascending order` of a minimum heap is only seen in the sequence presented with each root node removal.
+* Once loaded the useable apis are `pop` or removal, and potentially `empty`.
+* `has_more_items`, `next`, and `size` would seem to be a useful set of methods but are never mentioned.
 
 
 ## Usage
+To experiment with this code, execute `bin/console` for an interactive prompt.
 
 
 ```ruby
@@ -54,13 +81,10 @@ push Inserted at R/C/mR/cT => [4, 1, 16, 31], Node => {:label=>"The Martian", :v
 [2] pry(main)> heap.peek
 => {:label=>"The Matrix", :value=>70}
 
-[3] pry(main)> heap.last_node
-=> {93:{}|{}}
-
-[4] pry(main)> heap.root
+[3] pry(main)> heap
 => {70:{72:{78:{92:{93:{}|{}}|{}}|{94:{}|{}}}|{80:{86:{}|{}}|{98:{}|{}}}}|{85:{90:{99:{}|{}}|{100:{}|{}}}|{91:{101:{}|{}}|{102:{}|{}}}}}
 
-[5] pry(main)> heap.to_a
+[4] pry(main)> heap.to_a
 => [{:label=>"The Matrix", :value=>70},
  {:label=>"Pacific Rim", :value=>72},
  {:label=>"Braveheart", :value=>78},
@@ -78,13 +102,8 @@ push Inserted at R/C/mR/cT => [4, 1, 16, 31], Node => {:label=>"The Martian", :v
  {:label=>"Star Trek: Deep Space 9", :value=>101},
  {:label=>"Star Trek: Next Generation", :value=>102}]
 
-[6] pry(main)> heap.root.dfs_preorder([])
-NoMethodError: undefined method `dfs_preorder' for #<Heaps::Node:0x007fa1e6279338>
-Did you mean?  dfs_pre_order
-from (pry):6:in `__pry__'
-
-[7] pry(main)> heap.root.dfs_pre_order([])
-=> [{:label=>"The Matrix", :value=>70},
+[5] pry(main)> heap.display
+=> {:label=>"The Matrix", :value=>70},
  {:label=>"Pacific Rim", :value=>72},
  {:label=>"Braveheart", :value=>78},
  {:label=>"The Martian", :value=>92},
@@ -99,100 +118,102 @@ from (pry):6:in `__pry__'
  {:label=>"Star Trek: Voyager", :value=>100},
  {:label=>"The Shawshank Redemption", :value=>91},
  {:label=>"Star Trek: Deep Space 9", :value=>101},
- {:label=>"Star Trek: Next Generation", :value=>102}]
+ {:label=>"Star Trek: Next Generation", :value=>102}
 
-[8] pry(main)> heap.pop
+[6] pry(main)> heap.pop
 Removing Node: {:label=>"The Matrix", :value=>70}
 => {:label=>"The Matrix", :value=>70}
 
-[9] pry(main)> heap.inspect
+[7] pry(main)> heap.inspect
 => "{72:{78:{80:{92:{}|{}}|{94:{}|{}}}|{85:{86:{}|{}}|{98:{}|{}}}}|{90:{91:{99:{}|{}}|{100:{}|{}}}|{93:{101:{}|{}}|{102:{}|{}}}}}"
 
-[10] pry(main)> heap.pop
+[8] pry(main)> heap.pop
 Removing Node: {:label=>"Pacific Rim", :value=>72}
 => {:label=>"Pacific Rim", :value=>72}
 
-[11] pry(main)> heap.inspect
+[9] pry(main)> heap.inspect
 => "{78:{80:{85:{92:{}|{}}|{94:{}|{}}}|{86:{90:{}|{}}|{98:{}|{}}}}|{91:{93:{99:{}|{}}|{100:{}|{}}}|{101:{102:{}|{}}|{}}}}"
 
-[12] pry(main)> heap.pop
+[10] pry(main)> heap.pop
 Removing Node: {:label=>"Braveheart", :value=>78}
 => {:label=>"Braveheart", :value=>78}
 
-[13] pry(main)> heap.inspect
+[11] pry(main)> heap.inspect
 => "{80:{85:{86:{92:{}|{}}|{94:{}|{}}}|{90:{91:{}|{}}|{98:{}|{}}}}|{93:{99:{100:{}|{}}|{101:{}|{}}}|{102:{}|{}}}}"
 
-[14] pry(main)> heap.pop
+[12] pry(main)> heap.pop
 Removing Node: {:label=>"Star Wars: Return of the Jedi", :value=>80}
 => {:label=>"Star Wars: Return of the Jedi", :value=>80}
 
-[15] pry(main)> heap.inspect
+[13] pry(main)> heap.inspect
 => "{85:{86:{90:{92:{}|{}}|{94:{}|{}}}|{91:{93:{}|{}}|{98:{}|{}}}}|{99:{100:{101:{}|{}}|{102:{}|{}}}|{}}}"
 
-[16] pry(main)> heap.pop
+[14] pry(main)> heap.pop
 Removing Node: {:label=>"Donnie Darko", :value=>85}
 => {:label=>"Donnie Darko", :value=>85}
 
-[17] pry(main)> heap.inspect
+[15] pry(main)> heap.inspect
 => "{86:{90:{91:{92:{}|{}}|{94:{}|{}}}|{93:{98:{}|{}}|{99:{}|{}}}}|{100:{101:{102:{}|{}}|{}}|{}}}"
 
-[18] pry(main)> heap.pop
+[16] pry(main)> heap.pop
 Removing Node: {:label=>"Inception", :value=>86}
 => {:label=>"Inception", :value=>86}
 
-[19] pry(main)> heap.inspect
+[17] pry(main)> heap.inspect
 => "{90:{91:{92:{93:{}|{}}|{94:{}|{}}}|{98:{99:{}|{}}|{100:{}|{}}}}|{101:{102:{}|{}}|{}}}"
 
-[20] pry(main)> heap.pop
+[18] pry(main)> heap.pop
 Removing Node: {:label=>"District 9", :value=>90}
 => {:label=>"District 9", :value=>90}
 
-[21] pry(main)> heap.inspect
+[19] pry(main)> heap.inspect
 => "{91:{92:{93:{94:{}|{}}|{98:{}|{}}}|{99:{100:{}|{}}|{101:{}|{}}}}|{102:{}|{}}}"
 
-[22] pry(main)> heap.pop
+[20] pry(main)> heap.pop
 Removing Node: {:label=>"The Shawshank Redemption", :value=>91}
 => {:label=>"The Shawshank Redemption", :value=>91}
 
-[23] pry(main)> heap.inspect
+[21] pry(main)> heap.inspect
 => "{92:{93:{94:{98:{}|{}}|{99:{}|{}}}|{100:{101:{}|{}}|{102:{}|{}}}}|{}}"
 
-[24] pry(main)> heap.pop
+[22] pry(main)> heap.pop
 Removing Node: {:label=>"The Martian", :value=>92}
 => {:label=>"The Martian", :value=>92}
 
-[25] pry(main)> heap.inspect
+[23] pry(main)> heap.inspect
 => "{93:{94:{98:{99:{}|{}}|{100:{}|{}}}|{101:{102:{}|{}}|{}}}|{}}"
 
-[26] pry(main)> heap.pop
+[24] pry(main)> heap.pop
 Removing Node: {:label=>"Star Wars: A New Hope", :value=>93}
 => {:label=>"Star Wars: A New Hope", :value=>93}
 
-[27] pry(main)> heap.inspect
+[25] pry(main)> heap.inspect
 => "{94:{98:{99:{100:{}|{}}|{101:{}|{}}}|{102:{}|{}}}|{}}"
 
-[28] pry(main)> heap.pop
+[26] pry(main)> heap.pop
 Removing Node: {:label=>"Star Wars: The Empire Strikes Back", :value=>94}
 => {:label=>"Star Wars: The Empire Strikes Back", :value=>94}
 
-[29] pry(main)> heap.inspect
+[27] pry(main)> heap.inspect
 => "{98:{99:{100:{101:{}|{}}|{102:{}|{}}}|{}}|{}}"
 
-[30] pry(main)> heap.pop
+[28] pry(main)> heap.pop
 Removing Node: {:label=>"Mad Max 2: The Road Warrior", :value=>98}
 => {:label=>"Mad Max 2: The Road Warrior", :value=>98}
 
-[31] pry(main)> heap.inspect
+[29] pry(main)> heap.inspect
 => "{99:{100:{101:{102:{}|{}}|{}}|{}}|{}}"
 
-[32] pry(main)> heap.pop
+[30] pry(main)> heap.pop
 Removing Node: {:label=>"Star Trek: Star Trek", :value=>99}
 => {:label=>"Star Trek: Star Trek", :value=>99}
 
-[33] pry(main)> heap.inspect
+[31] pry(main)> heap.inspect
 => "{100:{101:{102:{}|{}}|{}}|{}}"
 
-[34] pry(main)>
+[32] pry(main)> quit
+$
+
 
 ##
 # Run Tests
@@ -203,108 +224,63 @@ $ open coverage/index.html
 $ bin/bench_minimum_heap
 $ bin/nodes
 
- Ref: http://www.geeksforgeeks.org/tree-traversals-inorder-preorder-and-postorder/
-   Depth First Traversals:
-   (a) Inorder   (Left, Root, Right) : 4 2 5 1 3
-   (b) Preorder  (Root, Left, Right) : 1 2 4 5 3
-   (c) Postorder (Left, Right, Root) : 4 5 2 3 1
-
-   Ref: http://www.geeksforgeeks.org/?p=2686
-   Breadth First or Level Order Traversal : 1 2 3 4 5
-
-
- Refs:
-   Balanced: http://www.geeksforgeeks.org/how-to-determine-if-a-binary-tree-is-balanced/
-
 
 ####
 # Ideal Interface
 # - EmptyNode
 # - Node
+# - UserData | user_data default ['Label String', int]
+#   * Examples:
+#   *          ['Movie Title", 12]
+#   *          [ ['Movie Title", 12], ... ]
+#   *          [ {label: 'Movie Title", value: 12}, ... ]
+#   *          [ Heaps::Node.new('Movie Title", 12), ... ]
 ####
-class MinimumHeap
-   def self.heapify(*user_data_ary)
-   end
-   def initialize(*args)
-   end
+module Heaps
+    class MinimumHeap
+       def self.heapify(user_data_ary)
+       end
+       def initialize(args=[])
+       end
 
-   def push(user_data)     | alias #<<
-   end
-   def pop
-   end
-   def peek
-   end
-   def include?(user_data)
-   end
+       def push(user_data)     | alias #<<
+       end
+       def peek
+       end
+       def include?(user_data)
+       end
 
-   def replace!(user_data)
-   end
-   def delete!(user_data)
-   end
+       def pop
+       end
+       def replace!(user_data)
+       end
+       def delete!(user_data)
+       end
 
-   def merge(other_heap)
-   end
-   def merge!(other_heap)
-   end
-   def union!(other_heap)
-   end
+       def merge(other_heap)
+       end
+       def merge!(other_heap)
+       end
+       def union!(other_heap)
+       end
 
-   def clear!
-   end
-   def size     | alias #length
-   end
-   def empty?
-   end
-   def to_a
-   end
-   def display
-   end
-   def inspect  | alias #to_s
-   end
+       def clear!
+       end
+       def size     | alias #length
+       end
+       def empty?
+       end
+       def to_a
+       end
+       def display
+       end
+       def inspect  | alias #to_s
+       end
+    end
 end
-   
 ```
 
-
-## More background on the ```Heap Property```
-A heap is an efficient semi-ordered data structure for storing a collection of orderable data. A min-heap supports two operations:
-
-    INSERT(heap, element)
-    element REMOVE_MIN(heap)
-
-This chapter will refer exclusively to binary heaps, although different types of heaps exist. The term binary heap and heap are
-interchangeable in most cases. A heap can be thought of as a tree with parent and child. The main difference between a heap and
-a binary tree is the heap property. In order for a data structure to be considered a heap, it must satisfy the following
-condition ```heap property```:
-
-    If A and B are elements in the heap and B is a child of A, then key(A) ≤ key(B).
-    (This property applies for a min-heap. A max heap would have the comparison reversed). What this tells us is that the minimum
-    key will always remain at the top and greater values will be below it. Due to this fact, heaps are used to implement priority
-    queues which allows quick access to the item with the most priority. Here's an example of a min-heap:
-
-![Minimal-Heap](https://upload.wikimedia.org/wikipedia/commons/5/5c/Binary-heap.png)
-
-    Description: Example of a complete binary max heap
-        Date	8 December 2010
-        Author	Ermishin
-
-A heap is implemented using an array that is indexed from 1 to N, where N is the number of elements in the heap.
-
-At any time, the heap must satisfy the heap property
-
-        array[n] <= array[2*n]   // parent element <= left child
-    and
-        array[n] <= array[2*n+1] // parent element <= right child
-![Arry Implementation](https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Heap-as-array.svg/603px-Heap-as-array.svg.png)
-
-    Description: Example of a complete binary max-heap with node keys being integers from 1 to 100 and how it would be stored in an array.
-        Date	30 January 2017
-        Author	Maxiantor
-
 ## Operations
-Ref: https://en.wikipedia.org/wiki/Heap_(data_structure)
-Ref: https://en.wikibooks.org/wiki/Data_Structures/Min_and_Max_Heaps
-
 The common operations involving heaps are:
 
 ### Basic
@@ -357,8 +333,7 @@ sift-down:
 : move a node down in the tree, similar to sift-up; used to restore heap condition after deletion or replacement.
 
 
-
-## Installation
+## Gem Installation
 
 Add this line to your application's Gemfile:
 
@@ -375,13 +350,24 @@ Or install it yourself as:
     $ gem install heaps
 
 
-
 ## Development
-
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
 To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+
+
+## Build
+
+1. $ git clone git@github.com:skoona/heaps.git
+2. $ cd heaps
+3. $ gem install bundler
+4. $ bin/setup
+5. $ bundle exec rspec
+6. $ gem build heaps.gemspec
+7. $ gem install heaps
+* Done
+
 
 ## Contributing
 
