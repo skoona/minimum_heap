@@ -188,12 +188,37 @@ module Heaps
 
     # Computes row/col to place this node
     # 0 row is root, 1,1 is root's left, 1,2 is root's right
-    def insert_positions
-      row_number = (Math.log2(size)).floor
+    def insert_positions(pos=@size)
+      pos = 1 if pos < 1
+      row_number = (Math.log2(pos)).floor
       row_max_count = 2 ** row_number
       tree_capacity = 2 ** (row_number + 1 ) - 1
-      target_location = row_max_count - (tree_capacity - size)
+      target_location = row_max_count - (tree_capacity - pos)
       [row_number, target_location, row_max_count, tree_capacity]
+    end
+
+    def insertion_path(node, nodes=@size)
+      tgt_row, tgt_col, tgt_row_max, tgt_cap = insert_positions(nodes)
+
+      return node if nodes == 1
+      
+      nav_node = root
+      row = 1
+
+      direction = ( tgt_col % 2 == 0 ) ? :right : :left
+      tree_base = direction
+      dlog("#{__method__} Row: #{tgt_row}, Direction: #{direction}, RowMax: #{tgt_row_max}, TargetColumn: #{tgt_col}")
+
+      while row < tgt_row do
+        tgt_row_max = (tgt_row_max / 2)
+        tgt_col = (tgt_col / 2.0).ceil
+
+        direction = ( tgt_col % 2 == 0 ) ? :right : :left
+        # nav_node = nav_node.send( direction )
+        dlog("#{__method__} Row: #{tgt_row - row}, Direction: #{direction}, RowMax: #{tgt_row_max}, TargetColumn: #{tgt_col}")
+
+        row += 1
+      end
     end
 
     # returns this_node on success
