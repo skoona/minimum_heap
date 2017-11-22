@@ -194,31 +194,12 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
 
   context "Heap Property Operations" do
 
-    it "Column Calcs: Find Col" do
-      expect( (1 > (8 / 2.0).ceil) ).to be false
-      expect( (2 > (8 / 2.0).ceil) ).to be false
-      expect( (3 > (8 / 2.0).ceil) ).to be false
-      expect( (4 > (8 / 2.0).ceil) ).to be false
-      expect( (5 > (8 / 2.0).ceil) ).to be true
-      expect( (6 > (8 / 2.0).ceil) ).to be true
-      expect( (7 > (8 / 2.0).ceil) ).to be true
-      expect( (8 > (8 / 2.0).ceil) ).to be true
-
-      expect( ( (8 / 2.0).ceil) - 1 ).to eq(3)
-      expect( ( (8 / 2.0).ceil) - 2 ).to eq(2)
-      expect( ( (8 / 2.0).ceil) - 3 ).to eq(1)
-      expect( ( (8 / 2.0).ceil) - 4 ).to eq(0)
-      expect( ( (8 / 2.0).ceil) - 5 ).to eq(-1)
-      expect( ( (8 / 2.0).ceil) - 6 ).to eq(-2)
-      expect( ( (8 / 2.0).ceil) - 7 ).to eq(-3)
-      expect( ( (8 / 2.0).ceil) - 8 ).to eq(-4)
-
-      expect( (1 / 2.0).ceil ).to eq(1)
-      expect( (2 / 2.0).ceil ).to eq(1)
-      expect( (4 / 2.0).ceil ).to eq(2)
-      expect( (8 / 2.0).ceil ).to eq(4)
-      expect( (16 / 2.0).ceil ).to eq(8)
-      expect( (32 / 2.0).ceil ).to eq(16)
+    it "#push will not overwrite existing node on new insert. " do
+      expect(heap_prop.peek[:value]).to eq(70)
+      expect(heap_prop.last_node.value).to eq(86)
+      expect(heap_prop.size).to eq(6)
+      expect{ heap_prop.send(:insertion_path, Heaps::Node.new(node4.first, node4.last), 4) }.to raise_error(ArgumentError)
+      expect(heap_prop.size).to eq(6)
     end
 
     it "#maintains Heap Property for nodes added." do
