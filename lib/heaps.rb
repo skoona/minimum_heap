@@ -61,7 +61,7 @@ module Heaps
       end
 
       @size += 1
-      node = insert_node( node)
+      node = insertion_path(node)
       dlog "#{__method__} Inserted at R/C/mR/cT => #{insert_positions}, Node => #{node.to_s}, Node.Parent => #{node.parent.to_s}"
       nil
     end
@@ -197,89 +197,42 @@ module Heaps
       [row_number, target_location, row_max_count, tree_capacity]
     end
 
-    def insertion_path(node, nodes=@size)
-      tgt_row, tgt_col, tgt_row_max, tgt_cap = insert_positions(nodes)
+    # navigate directly to node number(size)
+    # if node is not a Node, will return the node at number_number requested
+    def insertion_path(node, number_number=@size)
+      tgt_row, tgt_col, tgt_row_max, tgt_cap = insert_positions(number_number)
 
-      return node if nodes == 1
-      
+      return node if number_number == 1
+
+      nav_list = []
       nav_node = root
-      row = 1
-
-      direction = ( tgt_col % 2 == 0 ) ? :right : :left
-      tree_base = direction
-      dlog("#{__method__} Row: #{tgt_row}, Direction: #{direction}, RowMax: #{tgt_row_max}, TargetColumn: #{tgt_col}")
+      row = 0
 
       while row < tgt_row do
-        tgt_row_max = (tgt_row_max / 2)
-        tgt_col = (tgt_col / 2.0).ceil
-
         direction = ( tgt_col % 2 == 0 ) ? :right : :left
-        # nav_node = nav_node.send( direction )
+        nav_list << direction
         dlog("#{__method__} Row: #{tgt_row - row}, Direction: #{direction}, RowMax: #{tgt_row_max}, TargetColumn: #{tgt_col}")
 
+        tgt_row_max = (tgt_row_max / 2)
+        tgt_col = (tgt_col / 2.0).ceil
         row += 1
       end
-    end
 
-    # returns this_node on success
-    def insert_node(this_node)
-      row = 1
-      nav_node = root
-      prow, pcol, pmax, pcap = insert_positions
+      nav_list.shift if node.is_a?(Node)  # assume insert mode and stop one short of target
 
-      if @last_node.valid? and @last_node.parent.valid? and pcol != 1
-        nav_node = @last_node.parent
-
-      else # used to find column 1 on row changes
-        dlog("#{__method__} Column Calcs: #{( pcol > (pmax / 2.0).ceil )}, Row: #{prow}, pCol: #{pcol}, pMax: #{pmax}, Ceil: #{(pmax / 2.0).ceil}")
-
-        while prow > row  do                             # position to target row
-          nav_node = nav_node.left
-          row += 1
-        end
+      # Currently Backwards, so reverse before use
+      nav_list.reverse.each do |msg|     # navigate
+        nav_node = nav_node.send(msg)
       end
 
-      @last_node = row_wise_insert(nav_node, this_node)
-
-      maintain_heap_property(this_node)
-    end
-    
-    # Row Wise Insertions
-    def row_wise_insert(snode, new_node)
-      dlog "#{__method__} (Top) Node => #{snode.to_s}, New.Node => #{new_node.to_s}"
-
-      node = snode.insert_node( new_node )
-
-      unless node == new_node
-        dlog "#{__method__} (Ix) Node => #{node.to_s},  node.parent.valid? => #{node.parent.valid?}"
-        dlog "#{__method__} (Ix) Node => #{node.to_s},  node.parent.right.valid? => #{node.parent.right.valid?}"
-        dlog "#{__method__} (Ix) Node => #{node.to_s},  node.parent.right == node => #{node.parent.right == node}"
-
-        count = 0
-        while node.parent.valid? &&
-                node.parent.right.valid? &&
-                  node.parent.right == node do     # walk up to find path to right column
-          node = node.parent
-          count += 1
-          dlog "#{__method__} (I0) Node => #{node.to_s}, Node.Parent.Right => #{node.parent.right.to_s}"
-        end
-
-        dlog(root.inspect)
-
-        node = node.parent.right                   # Turn the corner
-
-        dlog "#{__method__} (I1) Count: #{count}, Node => #{node.to_s}, New.Node => #{new_node.to_s}"
-
-        while count > 0 && node.left.valid? do     # walk down to row
-          node = node.left
-          count -= 1
-        end
-
-        dlog "#{__method__} (I2) Node => #{node.to_s}, New.Node => #{new_node.to_s}"
-        node = row_wise_insert( node , new_node )
+      # do the insertion
+      if node.is_a?(Node)
+        node = nav_node.insert_node(node)
+        raise ArgumentError, "#{__method__} Failed to insert node: #{node.to_s}" if nav_node == node
+        @last_node = node
+        node = maintain_heap_property(node)
       end
 
-      dlog "#{__method__} (Exit) Last.Node => #{node.to_s}, New.Node => #{new_node.to_s}, Tree => #{root.inspect}"
       node
     end
 
