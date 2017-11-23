@@ -18,7 +18,7 @@ module Heaps
 
   class MinimumHeap
 
-    attr_reader :root, :last_node
+    attr_reader :root
 
     ##
     # Class Creates
@@ -32,7 +32,7 @@ module Heaps
       @size = 0
       @root = Heaps::EmptyNode.new
       @last_node = @root
-      @debug = false
+      @output_log = false
 
       unless args.empty?
         case args.first
@@ -61,7 +61,7 @@ module Heaps
       end
 
       @size += 1
-      node = insertion_path(node)
+      node = insert_node_on_path(node, @size)
       dlog "#{__method__} Inserted at R/C/mR/cT => #{insert_positions}, Node => #{node.to_s}, Node.Parent => #{node.parent.to_s}"
       nil
     end
@@ -193,21 +193,30 @@ module Heaps
       row_number = (Math.log2(pos)).floor
       row_max_count = 2 ** row_number
       tree_capacity = 2 ** (row_number + 1 ) - 1
-      target_location = row_max_count - (tree_capacity - pos)
-      [row_number, target_location, row_max_count, tree_capacity]
+      target_column = row_max_count - (tree_capacity - pos)
+      [row_number, target_column, row_max_count, tree_capacity]
+    end
+
+    def insert_node_on_path(node, insert_position=@size)
+      nav_node = node_path_navigation(insert_position, true)
+        raise ArgumentError, "#{__method__} Failed to locate an opening to insert node: #{node.to_s}" if nav_node.nil? or !nav_node.valid?
+
+      node = nav_node.insert_node(node)
+        raise ArgumentError, "#{__method__} Failed to insert node: #{node.to_s}" if nav_node == node
+
+      @last_node = node
+
+      maintain_heap_property(node)
     end
 
     # navigate directly to node number(size)
-    # if node is not a Node, will return the node at number_number requested
-    def insertion_path(node, number_number=@size)
-      tgt_row, tgt_col, tgt_row_max, tgt_cap = insert_positions(number_number)
+    def node_path_navigation(number_nodes, insert_mode=false)
+      return root if number_nodes <= 1
 
-      return node if number_number == 1
+      tgt_row, tgt_col, tgt_row_max, tgt_cap = insert_positions(number_nodes)
 
-      nav_list = []
-      nav_node = root
       row = 0
-
+      nav_list = []
       while row < tgt_row do
         direction = ( tgt_col % 2 == 0 ) ? :right : :left
         nav_list << direction
@@ -218,22 +227,16 @@ module Heaps
         row += 1
       end
 
-      nav_list.shift if node.is_a?(Node)  # assume insert mode and stop one short of target
+      # stop one short of target on insert mode
+      nav_list.shift if insert_mode
 
       # Currently Backwards, so reverse before use
+      nav_node = root
       nav_list.reverse.each do |msg|     # navigate
         nav_node = nav_node.send(msg)
       end
 
-      # do the insertion
-      if node.is_a?(Node)
-        node = nav_node.insert_node(node)
-        raise ArgumentError, "#{__method__} Failed to insert node: #{node.to_s}" if nav_node == node
-        @last_node = node
-        node = maintain_heap_property(node)
-      end
-
-      node
+      nav_node
     end
 
     # Heap Property: The value of parent is smaller than that of either child
@@ -245,7 +248,7 @@ module Heaps
 
       eval_node = node.parent
       while eval_node.valid? do
-        if (eval_node <=> node) > 0
+        if (eval_node > node)
           node = balance_subtree( eval_node.swap_contents(node) )
           eval_node = node.parent
         else
@@ -282,13 +285,13 @@ module Heaps
         replacement_node.clean                         # remove tree references from last node, allowing GC
 
       else
-        node.swap_contents(last_node)                  # Swap in value of last node to preserve last nodes value
-        last_node.clean                                # uncouple last node from tree
+        node.swap_contents(@last_node)                  # Swap in value of last node to preserve last nodes value
+        @last_node.clean                                # uncouple last node from tree
         @size -= 1
       end
 
-      if size > 1
-        @last_node = node.move_down                    # restore heap properties
+      if @size > 1
+        @last_node = node.move_down                     # restore heap properties
       else
         @last_node = node
       end
@@ -301,7 +304,7 @@ module Heaps
     end
 
     def dlog(msg)
-      return nil unless @debug
+      return nil unless @output_log
       puts msg
       nil
     end

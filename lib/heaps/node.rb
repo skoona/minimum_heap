@@ -17,7 +17,7 @@ module Heaps
     end
 
     def valid?
-      @value != nil
+      !@value.nil?
     end
 
     def data
@@ -32,8 +32,9 @@ module Heaps
         
     # Returns self(found matching node) or nil
     def include?(other_node)
-      (label == other_node.label && value == other_node.value ? self : nil) ||
-          left.include?(other_node) || right.include?(other_node)
+      (self == other_node ? self : nil) ||
+          left.include?(other_node) ||
+            right.include?(other_node)
     end
 
     # Insert here
