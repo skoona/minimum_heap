@@ -24,6 +24,7 @@ A Binary Heap is a Binary Tree with following properties.
 * The smallest element of the min-heap is at the root
 * The left child of a parent is less than the right child of same parent
 
+```ruby
 Ref: https://medium.freecodecamp.org/all-you-need-to-know-about-tree-data-structures-bceacb85490c
 Ref: http://www.geeksforgeeks.org/binary-heap/
 Ref: https://en.wikipedia.org/wiki/Heap_(data_structure)
@@ -31,7 +32,7 @@ Ref: https://en.wikibooks.org/wiki/Data_Structures/Min_and_Max_Heaps
 Ref: http://www.geeksforgeeks.org/tree-traversals-inorder-preorder-and-postorder/
 Ref: http://www.geeksforgeeks.org/how-to-determine-if-a-binary-tree-is-balanced/
 Ref: http://www.geeksforgeeks.org/?p=2686
-
+```
 
     Depth First Traversals:
       (a) Inorder   (Left, Root, Right) : 4 2 5 1 3
