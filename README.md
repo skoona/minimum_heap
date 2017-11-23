@@ -361,7 +361,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 ## Build
 
 1. $ git clone git@github.com:skoona/minimum_heap.git
-2. $ cd heaps
+2. $ cd minimum_heap
 3. $ gem install bundler
 4. $ bin/setup
 5. $ bundle exec rspec
