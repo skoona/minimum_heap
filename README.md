@@ -56,158 +56,158 @@ To experiment with this code, execute `bin/console` for an interactive prompt.
 ####
 [jscott@imac MinimumHeap]$ bin/console
 
-[1] pry(main)> heap = Heaps::MinimumHeap.new([{:label=>"Star Trek: Next Generation", :value=>102}, {:label=>"The Matrix", :value=>70}, {:label=>"Pacific Rim", :value=>72},
-        {:label=>"Star Wars: Return of the Jedi", :value=>80}, {:label=>"Mad Max 2: The Road Warrior", :value=>98}, {:label=>"The Shawshank Redemption", :value=>91},
-        {:label=>"Donnie Darko", :value=>85}, {:label=>"Star Wars: A New Hope", :value=>93}, {:label=>"Star Wars: The Empire Strikes Back", :value=>94}, {:label=>"Braveheart", :value=>78},
-        {:label=>"Inception", :value=>86}, {:label=>"Star Trek: Voyager", :value=>100}, {:label=>"Star Trek: Star Trek", :value=>99}, {:label=>"District 9", :value=>90},
-        {:label=>"Star Trek: Deep Space 9", :value=>101}, {:label=>"The Martian", :value=>92}])
-push Inserted at R/C/mR/cT => [0, 1, 1, 1], Root.Node => {:label=>"Star Trek: Next Generation", :value=>102}, Node.Parent => {:label=>"Heaps::EmptyNode", :value=>-1}
-push Inserted at R/C/mR/cT => [1, 1, 2, 3], Node => {:label=>"The Matrix", :value=>70}, Node.Parent => {:label=>"Heaps::EmptyNode", :value=>-1}
-push Inserted at R/C/mR/cT => [1, 2, 2, 3], Node => {:label=>"Pacific Rim", :value=>72}, Node.Parent => {:label=>"The Matrix", :value=>70}
-push Inserted at R/C/mR/cT => [2, 1, 4, 7], Node => {:label=>"Star Wars: Return of the Jedi", :value=>80}, Node.Parent => {:label=>"Pacific Rim", :value=>72}
-push Inserted at R/C/mR/cT => [2, 2, 4, 7], Node => {:label=>"Mad Max 2: The Road Warrior", :value=>98}, Node.Parent => {:label=>"Pacific Rim", :value=>72}
-push Inserted at R/C/mR/cT => [2, 3, 4, 7], Node => {:label=>"The Shawshank Redemption", :value=>91}, Node.Parent => {:label=>"The Matrix", :value=>70}
-push Inserted at R/C/mR/cT => [2, 4, 4, 7], Node => {:label=>"Donnie Darko", :value=>85}, Node.Parent => {:label=>"The Matrix", :value=>70}
-push Inserted at R/C/mR/cT => [3, 1, 8, 15], Node => {:label=>"Star Wars: A New Hope", :value=>93}, Node.Parent => {:label=>"Star Wars: Return of the Jedi", :value=>80}
-push Inserted at R/C/mR/cT => [3, 2, 8, 15], Node => {:label=>"Star Wars: The Empire Strikes Back", :value=>94}, Node.Parent => {:label=>"Star Wars: Return of the Jedi", :value=>80}
-push Inserted at R/C/mR/cT => [3, 3, 8, 15], Node => {:label=>"Braveheart", :value=>78}, Node.Parent => {:label=>"Pacific Rim", :value=>72}
-push Inserted at R/C/mR/cT => [3, 4, 8, 15], Node => {:label=>"Inception", :value=>86}, Node.Parent => {:label=>"Star Wars: Return of the Jedi", :value=>80}
-push Inserted at R/C/mR/cT => [3, 5, 8, 15], Node => {:label=>"Star Trek: Voyager", :value=>100}, Node.Parent => {:label=>"The Shawshank Redemption", :value=>91}
-push Inserted at R/C/mR/cT => [3, 6, 8, 15], Node => {:label=>"Star Trek: Star Trek", :value=>99}, Node.Parent => {:label=>"The Shawshank Redemption", :value=>91}
-push Inserted at R/C/mR/cT => [3, 7, 8, 15], Node => {:label=>"District 9", :value=>90}, Node.Parent => {:label=>"Donnie Darko", :value=>85}
-push Inserted at R/C/mR/cT => [3, 8, 8, 15], Node => {:label=>"Star Trek: Deep Space 9", :value=>101}, Node.Parent => {:label=>"The Shawshank Redemption", :value=>91}
-push Inserted at R/C/mR/cT => [4, 1, 16, 31], Node => {:label=>"The Martian", :value=>92}, Node.Parent => {:label=>"Braveheart", :value=>78}
+[1] pry(main)> heap = Heaps::MinimumHeap.new([{:description=>"Star Trek: Next Generation", :value=>102}, {:description=>"The Matrix", :value=>70}, {:description=>"Pacific Rim", :value=>72},
+        {:description=>"Star Wars: Return of the Jedi", :value=>80}, {:description=>"Mad Max 2: The Road Warrior", :value=>98}, {:description=>"The Shawshank Redemption", :value=>91},
+        {:description=>"Donnie Darko", :value=>85}, {:description=>"Star Wars: A New Hope", :value=>93}, {:description=>"Star Wars: The Empire Strikes Back", :value=>94}, {:description=>"Braveheart", :value=>78},
+        {:description=>"Inception", :value=>86}, {:description=>"Star Trek: Voyager", :value=>100}, {:description=>"Star Trek: Star Trek", :value=>99}, {:description=>"District 9", :value=>90},
+        {:description=>"Star Trek: Deep Space 9", :value=>101}, {:description=>"The Martian", :value=>92}])
+push Inserted at R/C/mR/cT => [0, 1, 1, 1], Root.Node => {:description=>"Star Trek: Next Generation", :value=>102}, Node.Parent => {:description=>"Heaps::EmptyNode", :value=>-1}
+push Inserted at R/C/mR/cT => [1, 1, 2, 3], Node => {:description=>"The Matrix", :value=>70}, Node.Parent => {:description=>"Heaps::EmptyNode", :value=>-1}
+push Inserted at R/C/mR/cT => [1, 2, 2, 3], Node => {:description=>"Pacific Rim", :value=>72}, Node.Parent => {:description=>"The Matrix", :value=>70}
+push Inserted at R/C/mR/cT => [2, 1, 4, 7], Node => {:description=>"Star Wars: Return of the Jedi", :value=>80}, Node.Parent => {:description=>"Pacific Rim", :value=>72}
+push Inserted at R/C/mR/cT => [2, 2, 4, 7], Node => {:description=>"Mad Max 2: The Road Warrior", :value=>98}, Node.Parent => {:description=>"Pacific Rim", :value=>72}
+push Inserted at R/C/mR/cT => [2, 3, 4, 7], Node => {:description=>"The Shawshank Redemption", :value=>91}, Node.Parent => {:description=>"The Matrix", :value=>70}
+push Inserted at R/C/mR/cT => [2, 4, 4, 7], Node => {:description=>"Donnie Darko", :value=>85}, Node.Parent => {:description=>"The Matrix", :value=>70}
+push Inserted at R/C/mR/cT => [3, 1, 8, 15], Node => {:description=>"Star Wars: A New Hope", :value=>93}, Node.Parent => {:description=>"Star Wars: Return of the Jedi", :value=>80}
+push Inserted at R/C/mR/cT => [3, 2, 8, 15], Node => {:description=>"Star Wars: The Empire Strikes Back", :value=>94}, Node.Parent => {:description=>"Star Wars: Return of the Jedi", :value=>80}
+push Inserted at R/C/mR/cT => [3, 3, 8, 15], Node => {:description=>"Braveheart", :value=>78}, Node.Parent => {:description=>"Pacific Rim", :value=>72}
+push Inserted at R/C/mR/cT => [3, 4, 8, 15], Node => {:description=>"Inception", :value=>86}, Node.Parent => {:description=>"Star Wars: Return of the Jedi", :value=>80}
+push Inserted at R/C/mR/cT => [3, 5, 8, 15], Node => {:description=>"Star Trek: Voyager", :value=>100}, Node.Parent => {:description=>"The Shawshank Redemption", :value=>91}
+push Inserted at R/C/mR/cT => [3, 6, 8, 15], Node => {:description=>"Star Trek: Star Trek", :value=>99}, Node.Parent => {:description=>"The Shawshank Redemption", :value=>91}
+push Inserted at R/C/mR/cT => [3, 7, 8, 15], Node => {:description=>"District 9", :value=>90}, Node.Parent => {:description=>"Donnie Darko", :value=>85}
+push Inserted at R/C/mR/cT => [3, 8, 8, 15], Node => {:description=>"Star Trek: Deep Space 9", :value=>101}, Node.Parent => {:description=>"The Shawshank Redemption", :value=>91}
+push Inserted at R/C/mR/cT => [4, 1, 16, 31], Node => {:description=>"The Martian", :value=>92}, Node.Parent => {:description=>"Braveheart", :value=>78}
 => {70:{72:{78:{92:{93:{}|{}}|{}}|{94:{}|{}}}|{80:{86:{}|{}}|{98:{}|{}}}}|{85:{90:{99:{}|{}}|{100:{}|{}}}|{91:{101:{}|{}}|{102:{}|{}}}}}
 
 [2] pry(main)> heap.peek
-=> {:label=>"The Matrix", :value=>70}
+=> {:description=>"The Matrix", :value=>70}
 
 [3] pry(main)> heap
 => {70:{72:{78:{92:{93:{}|{}}|{}}|{94:{}|{}}}|{80:{86:{}|{}}|{98:{}|{}}}}|{85:{90:{99:{}|{}}|{100:{}|{}}}|{91:{101:{}|{}}|{102:{}|{}}}}}
 
 [4] pry(main)> heap.to_a
-=> [{:label=>"The Matrix", :value=>70},
- {:label=>"Pacific Rim", :value=>72},
- {:label=>"Braveheart", :value=>78},
- {:label=>"The Martian", :value=>92},
- {:label=>"Star Wars: A New Hope", :value=>93},
- {:label=>"Star Wars: The Empire Strikes Back", :value=>94},
- {:label=>"Star Wars: Return of the Jedi", :value=>80},
- {:label=>"Inception", :value=>86},
- {:label=>"Mad Max 2: The Road Warrior", :value=>98},
- {:label=>"Donnie Darko", :value=>85},
- {:label=>"District 9", :value=>90},
- {:label=>"Star Trek: Star Trek", :value=>99},
- {:label=>"Star Trek: Voyager", :value=>100},
- {:label=>"The Shawshank Redemption", :value=>91},
- {:label=>"Star Trek: Deep Space 9", :value=>101},
- {:label=>"Star Trek: Next Generation", :value=>102}]
+=> [{:description=>"The Matrix", :value=>70},
+ {:description=>"Pacific Rim", :value=>72},
+ {:description=>"Braveheart", :value=>78},
+ {:description=>"The Martian", :value=>92},
+ {:description=>"Star Wars: A New Hope", :value=>93},
+ {:description=>"Star Wars: The Empire Strikes Back", :value=>94},
+ {:description=>"Star Wars: Return of the Jedi", :value=>80},
+ {:description=>"Inception", :value=>86},
+ {:description=>"Mad Max 2: The Road Warrior", :value=>98},
+ {:description=>"Donnie Darko", :value=>85},
+ {:description=>"District 9", :value=>90},
+ {:description=>"Star Trek: Star Trek", :value=>99},
+ {:description=>"Star Trek: Voyager", :value=>100},
+ {:description=>"The Shawshank Redemption", :value=>91},
+ {:description=>"Star Trek: Deep Space 9", :value=>101},
+ {:description=>"Star Trek: Next Generation", :value=>102}]
 
 [5] pry(main)> heap.display
-=> {:label=>"The Matrix", :value=>70},
- {:label=>"Pacific Rim", :value=>72},
- {:label=>"Braveheart", :value=>78},
- {:label=>"The Martian", :value=>92},
- {:label=>"Star Wars: A New Hope", :value=>93},
- {:label=>"Star Wars: The Empire Strikes Back", :value=>94},
- {:label=>"Star Wars: Return of the Jedi", :value=>80},
- {:label=>"Inception", :value=>86},
- {:label=>"Mad Max 2: The Road Warrior", :value=>98},
- {:label=>"Donnie Darko", :value=>85},
- {:label=>"District 9", :value=>90},
- {:label=>"Star Trek: Star Trek", :value=>99},
- {:label=>"Star Trek: Voyager", :value=>100},
- {:label=>"The Shawshank Redemption", :value=>91},
- {:label=>"Star Trek: Deep Space 9", :value=>101},
- {:label=>"Star Trek: Next Generation", :value=>102}
+=> {:description=>"The Matrix", :value=>70},
+ {:description=>"Pacific Rim", :value=>72},
+ {:description=>"Braveheart", :value=>78},
+ {:description=>"The Martian", :value=>92},
+ {:description=>"Star Wars: A New Hope", :value=>93},
+ {:description=>"Star Wars: The Empire Strikes Back", :value=>94},
+ {:description=>"Star Wars: Return of the Jedi", :value=>80},
+ {:description=>"Inception", :value=>86},
+ {:description=>"Mad Max 2: The Road Warrior", :value=>98},
+ {:description=>"Donnie Darko", :value=>85},
+ {:description=>"District 9", :value=>90},
+ {:description=>"Star Trek: Star Trek", :value=>99},
+ {:description=>"Star Trek: Voyager", :value=>100},
+ {:description=>"The Shawshank Redemption", :value=>91},
+ {:description=>"Star Trek: Deep Space 9", :value=>101},
+ {:description=>"Star Trek: Next Generation", :value=>102}
 
 [6] pry(main)> heap.pop
-Removing Node: {:label=>"The Matrix", :value=>70}
-=> {:label=>"The Matrix", :value=>70}
+Removing Node: {:description=>"The Matrix", :value=>70}
+=> {:description=>"The Matrix", :value=>70}
 
 [7] pry(main)> heap.inspect
 => "{72:{78:{80:{92:{}|{}}|{94:{}|{}}}|{85:{86:{}|{}}|{98:{}|{}}}}|{90:{91:{99:{}|{}}|{100:{}|{}}}|{93:{101:{}|{}}|{102:{}|{}}}}}"
 
 [8] pry(main)> heap.pop
-Removing Node: {:label=>"Pacific Rim", :value=>72}
-=> {:label=>"Pacific Rim", :value=>72}
+Removing Node: {:description=>"Pacific Rim", :value=>72}
+=> {:description=>"Pacific Rim", :value=>72}
 
 [9] pry(main)> heap.inspect
 => "{78:{80:{85:{92:{}|{}}|{94:{}|{}}}|{86:{90:{}|{}}|{98:{}|{}}}}|{91:{93:{99:{}|{}}|{100:{}|{}}}|{101:{102:{}|{}}|{}}}}"
 
 [10] pry(main)> heap.pop
-Removing Node: {:label=>"Braveheart", :value=>78}
-=> {:label=>"Braveheart", :value=>78}
+Removing Node: {:description=>"Braveheart", :value=>78}
+=> {:description=>"Braveheart", :value=>78}
 
 [11] pry(main)> heap.inspect
 => "{80:{85:{86:{92:{}|{}}|{94:{}|{}}}|{90:{91:{}|{}}|{98:{}|{}}}}|{93:{99:{100:{}|{}}|{101:{}|{}}}|{102:{}|{}}}}"
 
 [12] pry(main)> heap.pop
-Removing Node: {:label=>"Star Wars: Return of the Jedi", :value=>80}
-=> {:label=>"Star Wars: Return of the Jedi", :value=>80}
+Removing Node: {:description=>"Star Wars: Return of the Jedi", :value=>80}
+=> {:description=>"Star Wars: Return of the Jedi", :value=>80}
 
 [13] pry(main)> heap.inspect
 => "{85:{86:{90:{92:{}|{}}|{94:{}|{}}}|{91:{93:{}|{}}|{98:{}|{}}}}|{99:{100:{101:{}|{}}|{102:{}|{}}}|{}}}"
 
 [14] pry(main)> heap.pop
-Removing Node: {:label=>"Donnie Darko", :value=>85}
-=> {:label=>"Donnie Darko", :value=>85}
+Removing Node: {:description=>"Donnie Darko", :value=>85}
+=> {:description=>"Donnie Darko", :value=>85}
 
 [15] pry(main)> heap.inspect
 => "{86:{90:{91:{92:{}|{}}|{94:{}|{}}}|{93:{98:{}|{}}|{99:{}|{}}}}|{100:{101:{102:{}|{}}|{}}|{}}}"
 
 [16] pry(main)> heap.pop
-Removing Node: {:label=>"Inception", :value=>86}
-=> {:label=>"Inception", :value=>86}
+Removing Node: {:description=>"Inception", :value=>86}
+=> {:description=>"Inception", :value=>86}
 
 [17] pry(main)> heap.inspect
 => "{90:{91:{92:{93:{}|{}}|{94:{}|{}}}|{98:{99:{}|{}}|{100:{}|{}}}}|{101:{102:{}|{}}|{}}}"
 
 [18] pry(main)> heap.pop
-Removing Node: {:label=>"District 9", :value=>90}
-=> {:label=>"District 9", :value=>90}
+Removing Node: {:description=>"District 9", :value=>90}
+=> {:description=>"District 9", :value=>90}
 
 [19] pry(main)> heap.inspect
 => "{91:{92:{93:{94:{}|{}}|{98:{}|{}}}|{99:{100:{}|{}}|{101:{}|{}}}}|{102:{}|{}}}"
 
 [20] pry(main)> heap.pop
-Removing Node: {:label=>"The Shawshank Redemption", :value=>91}
-=> {:label=>"The Shawshank Redemption", :value=>91}
+Removing Node: {:description=>"The Shawshank Redemption", :value=>91}
+=> {:description=>"The Shawshank Redemption", :value=>91}
 
 [21] pry(main)> heap.inspect
 => "{92:{93:{94:{98:{}|{}}|{99:{}|{}}}|{100:{101:{}|{}}|{102:{}|{}}}}|{}}"
 
 [22] pry(main)> heap.pop
-Removing Node: {:label=>"The Martian", :value=>92}
-=> {:label=>"The Martian", :value=>92}
+Removing Node: {:description=>"The Martian", :value=>92}
+=> {:description=>"The Martian", :value=>92}
 
 [23] pry(main)> heap.inspect
 => "{93:{94:{98:{99:{}|{}}|{100:{}|{}}}|{101:{102:{}|{}}|{}}}|{}}"
 
 [24] pry(main)> heap.pop
-Removing Node: {:label=>"Star Wars: A New Hope", :value=>93}
-=> {:label=>"Star Wars: A New Hope", :value=>93}
+Removing Node: {:description=>"Star Wars: A New Hope", :value=>93}
+=> {:description=>"Star Wars: A New Hope", :value=>93}
 
 [25] pry(main)> heap.inspect
 => "{94:{98:{99:{100:{}|{}}|{101:{}|{}}}|{102:{}|{}}}|{}}"
 
 [26] pry(main)> heap.pop
-Removing Node: {:label=>"Star Wars: The Empire Strikes Back", :value=>94}
-=> {:label=>"Star Wars: The Empire Strikes Back", :value=>94}
+Removing Node: {:description=>"Star Wars: The Empire Strikes Back", :value=>94}
+=> {:description=>"Star Wars: The Empire Strikes Back", :value=>94}
 
 [27] pry(main)> heap.inspect
 => "{98:{99:{100:{101:{}|{}}|{102:{}|{}}}|{}}|{}}"
 
 [28] pry(main)> heap.pop
-Removing Node: {:label=>"Mad Max 2: The Road Warrior", :value=>98}
-=> {:label=>"Mad Max 2: The Road Warrior", :value=>98}
+Removing Node: {:description=>"Mad Max 2: The Road Warrior", :value=>98}
+=> {:description=>"Mad Max 2: The Road Warrior", :value=>98}
 
 [29] pry(main)> heap.inspect
 => "{99:{100:{101:{102:{}|{}}|{}}|{}}|{}}"
 
 [30] pry(main)> heap.pop
-Removing Node: {:label=>"Star Trek: Star Trek", :value=>99}
-=> {:label=>"Star Trek: Star Trek", :value=>99}
+Removing Node: {:description=>"Star Trek: Star Trek", :value=>99}
+=> {:description=>"Star Trek: Star Trek", :value=>99}
 
 [31] pry(main)> heap.inspect
 => "{100:{101:{102:{}|{}}|{}}|{}}"
@@ -234,7 +234,7 @@ $ bin/nodes
 #   * Examples:
 #   *          ['Movie Title", 12]
 #   *          [ ['Movie Title", 12], ... ]
-#   *          [ {label: 'Movie Title", value: 12}, ... ]
+#   *          [ {description: 'Movie Title", value: 12}, ... ]
 #   *          [ Heaps::Node.new('Movie Title", 12), ... ]
 ####
 module Heaps

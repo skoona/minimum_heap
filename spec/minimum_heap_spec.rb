@@ -48,7 +48,7 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
     end
 
     it "initializes with array of hash values" do
-      hash_ary = [root, node1, node2, node3, node4].map {|x| {label: x.first, value: x.last} }
+      hash_ary = [root, node1, node2, node3, node4].map {|x| {description: x.first, value: x.last} }
       expect(described_class.new(hash_ary)).to be
     end
 
@@ -79,8 +79,8 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
       expect(@base).to be
     end
 
-    it "#label returns a value" do
-      expect(@base.label).to be_a(String)
+    it "#description returns a value" do
+      expect(@base.description).to be_a(String)
     end
 
     it "#value returns a value" do
@@ -244,7 +244,7 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
     end
 
     it "#pop remove nodes in ascending order" do
-      expected_array = [{:label=>"The Matrix", :value=>70}, {:label=>"Pacific Rim", :value=>72}, {:label=>"Star Wars: Return of the Jedi", :value=>80}, {:label=>"Donnie Darko", :value=>85}, {:label=>"Inception", :value=>86}, {:label=>"Mad Max 2: The Road Warrior", :value=>98}]
+      expected_array = [{:description=>"The Matrix", :value=>70}, {:description=>"Pacific Rim", :value=>72}, {:description=>"Star Wars: Return of the Jedi", :value=>80}, {:description=>"Donnie Darko", :value=>85}, {:description=>"Inception", :value=>86}, {:description=>"Mad Max 2: The Road Warrior", :value=>98}]
       actual_array = []
       while !heap_prop.empty? do
         actual_array << heap_prop.pop
@@ -275,16 +275,16 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
 
     it "#include? finds requested node from array, hash, or node input. " do
       expect(heap_prop.include?(["Mad Max 2: The Road Warrior", 98], true)).to be_a(Heaps::Node)
-      expect(heap_prop.include?({:label=>"Mad Max 2: The Road Warrior", :value=>98}, true)).to be_a(Heaps::Node)
+      expect(heap_prop.include?({:description=>"Mad Max 2: The Road Warrior", :value=>98}, true)).to be_a(Heaps::Node)
       expect(heap_prop.include?(node11, true)).to be_a(Heaps::Node)
-      expect(heap_prop.include?(node11)).to eq({:label=>"Mad Max 2: The Road Warrior", :value=>98})
+      expect(heap_prop.include?(node11)).to eq({:description=>"Mad Max 2: The Road Warrior", :value=>98})
     end
 
     it "#delete! removes node matching input user_data. " do
       expect(heap_prop.peek[:value]).to eq(70)
       expect(heap_prop.size).to eq(6)
 
-      expect(heap_prop.delete!(["Mad Max 2: The Road Warrior", 98])).to eq({:label=>"Mad Max 2: The Road Warrior", :value=>98})
+      expect(heap_prop.delete!(["Mad Max 2: The Road Warrior", 98])).to eq({:description=>"Mad Max 2: The Road Warrior", :value=>98})
 
       expect(heap_prop.peek[:value]).to eq(70)
       expect(heap_prop.size).to eq(5)
@@ -341,17 +341,17 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
     end
 
     it "#to_a returns and array representing the current Minimum Heap. " do
-      expect(heap_prop.to_a).to match_array [{:label=>"The Matrix", :value=>70}, {:label=>"Pacific Rim", :value=>72}, {:label=>"Star Wars: Return of the Jedi", :value=>80}, {:label=>"Donnie Darko", :value=>85}, {:label=>"Inception", :value=>86}, {:label=>"Mad Max 2: The Road Warrior", :value=>98}]
+      expect(heap_prop.to_a).to match_array [{:description=>"The Matrix", :value=>70}, {:description=>"Pacific Rim", :value=>72}, {:description=>"Star Wars: Return of the Jedi", :value=>80}, {:description=>"Donnie Darko", :value=>85}, {:description=>"Inception", :value=>86}, {:description=>"Mad Max 2: The Road Warrior", :value=>98}]
     end
 
     it "#display prints the user data of each node in the current Minimum Heap. " do
-      expect(heap_prop.display).to match_array [{:label=>"The Matrix", :value=>70}, {:label=>"Pacific Rim", :value=>72}, {:label=>"Star Wars: Return of the Jedi", :value=>80}, {:label=>"Donnie Darko", :value=>85}, {:label=>"Inception", :value=>86}, {:label=>"Mad Max 2: The Road Warrior", :value=>98}]
+      expect(heap_prop.display).to match_array [{:description=>"The Matrix", :value=>70}, {:description=>"Pacific Rim", :value=>72}, {:description=>"Star Wars: Return of the Jedi", :value=>80}, {:description=>"Donnie Darko", :value=>85}, {:description=>"Inception", :value=>86}, {:description=>"Mad Max 2: The Road Warrior", :value=>98}]
     end
 
   end
 
 end
 
-# {:label=>"Mad Max 2: The Road Warrior", :value=>98}, {:label=>"Pacific Rim", :value=>72}, {:label=>"Star Wars: Return of the Jedi", :value=>80}, {:label=>"Donnie Darko", :value=>85}, {:label=>"The Matrix", :value=>70}, {:label=>"Inception", :value=>86}
+# {:description=>"Mad Max 2: The Road Warrior", :value=>98}, {:description=>"Pacific Rim", :value=>72}, {:description=>"Star Wars: Return of the Jedi", :value=>80}, {:description=>"Donnie Darko", :value=>85}, {:description=>"The Matrix", :value=>70}, {:description=>"Inception", :value=>86}
 
-# {:label=>"Star Trek: Next Generation", :value=>102}, {:label=>"The Matrix", :value=>70}, {:label=>"Pacific Rim", :value=>72}, {:label=>"Star Wars: Return of the Jedi", :value=>80}, {:label=>"Mad Max 2: The Road Warrior", :value=>98}, {:label=>"The Shawshank Redemption", :value=>91}, {:label=>"Donnie Darko", :value=>85}, {:label=>"Star Wars: A New Hope", :value=>93}, {:label=>"Star Wars: The Empire Strikes Back", :value=>94}, {:label=>"Braveheart", :value=>78}, {:label=>"Inception", :value=>86}, {:label=>"Star Trek: Voyager", :value=>100}, {:label=>"Star Trek: Star Trek", :value=>99}, {:label=>"District 9", :value=>90}, {:label=>"Star Trek: Deep Space 9", :value=>101}, {:label=>"The Martian", :value=>92}
+# {:description=>"Star Trek: Next Generation", :value=>102}, {:description=>"The Matrix", :value=>70}, {:description=>"Pacific Rim", :value=>72}, {:description=>"Star Wars: Return of the Jedi", :value=>80}, {:description=>"Mad Max 2: The Road Warrior", :value=>98}, {:description=>"The Shawshank Redemption", :value=>91}, {:description=>"Donnie Darko", :value=>85}, {:description=>"Star Wars: A New Hope", :value=>93}, {:description=>"Star Wars: The Empire Strikes Back", :value=>94}, {:description=>"Braveheart", :value=>78}, {:description=>"Inception", :value=>86}, {:description=>"Star Trek: Voyager", :value=>100}, {:description=>"Star Trek: Star Trek", :value=>99}, {:description=>"District 9", :value=>90}, {:description=>"Star Trek: Deep Space 9", :value=>101}, {:description=>"The Martian", :value=>92}

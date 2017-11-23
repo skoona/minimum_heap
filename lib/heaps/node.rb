@@ -5,10 +5,10 @@
 module Heaps
 
   class  Node
-    attr_accessor :left, :right, :parent, :label, :value
+    attr_accessor :left, :right, :parent, :description, :value
 
-    def initialize(text_label, data_value)
-      @label  = text_label
+    def initialize(text_description, data_value)
+      @description  = text_description
       @value  = data_value
       tmp = EmptyNode.new
       @left   = tmp
@@ -20,22 +20,31 @@ module Heaps
       !@value.nil?
     end
 
-    def data
-      {label: label.dup, value: value.dup}
-    end
+    ##
+    # Output
+    ##
 
     def data=(other_hash)
-      self.label = other_hash[:label]
+      self.description = other_hash[:description]
       self.value = other_hash[:value]
       nil
     end
-        
-    # Returns self(found matching node) or nil
-    def include?(other_node)
-      (self == other_node ? self : nil) ||
-          left.include?(other_node) ||
-            right.include?(other_node)
+
+    def data
+      {description: description.dup, value: value.dup}
     end
+
+    def to_s
+      data
+    end
+
+    def inspect
+      "{#{value}:#{left.inspect}|#{right.inspect}}"
+    end
+
+    ##
+    # Core Operations
+    ##
 
     # Insert here
     def insert_node(node)
@@ -48,6 +57,29 @@ module Heaps
       else
         insert_left(node)
       end
+    end
+
+    # Returns self(found matching node) or nil
+    def include?(other_node)
+      (self == other_node ? self : nil) ||
+          left.include?(other_node) ||
+          right.include?(other_node)
+    end
+
+    # Use PreOrder method to search Tree
+    # - Supporting #to_a
+    # https://medium.freecodecamp.org/all-you-need-to-know-about-tree-data-structures-bceacb85490c
+    def dfs_pre_order(collector=[])
+      collector << data
+
+      if left.valid?
+        left.dfs_pre_order(collector)
+      end
+      if right.valid?
+        right.dfs_pre_order(collector)
+      end
+
+      collector
     end
 
     # Heap Property: The value of parent is smaller than that of either child
@@ -83,7 +115,7 @@ module Heaps
         left&.valid?  ? left.clean(children) : nil
         right&.valid? ? right.clean(children) : nil
       end
-      self.label = nil
+      self.description = nil
       self.value = nil
       self.left = nil
       self.right = nil
@@ -99,29 +131,9 @@ module Heaps
       self
     end
 
-    # Use PreOrder method to search Tree
-    # - Supporting #to_a
-    # https://medium.freecodecamp.org/all-you-need-to-know-about-tree-data-structures-bceacb85490c
-    def dfs_pre_order(collector=[])
-      collector << data
-
-      if left.valid?
-        left.dfs_pre_order(collector)
-      end
-      if right.valid?
-        right.dfs_pre_order(collector)
-      end
-      
-      collector
-    end
-
-    def to_s
-      data
-    end
-
-    def inspect
-      "{#{value}:#{left.inspect}|#{right.inspect}}"
-    end
+    ##
+    # Comparisons
+    ##
 
     def <=>(other)
       if value > other.value
@@ -135,6 +147,11 @@ module Heaps
       end
     end
 
+    def ==(other)
+      self.class === other and hash == other.hash
+    end
+    alias_method  :eql?, :==
+
     def <(other)
       (self <=> other) < 0
     end
@@ -143,13 +160,8 @@ module Heaps
       (self <=> other) > 0
     end
 
-    def ==(other)
-      self.class === other and hash == other.hash
-    end
-    alias_method  :eql?, :==
-
     def hash
-      label.hash ^ value.hash # XOR
+      description.hash ^ value.hash # XOR
     end
 
   private

@@ -6,10 +6,10 @@
 module Heaps
 
   class  BaseNode
-    attr_accessor :left, :right, :parent, :label, :value
+    attr_accessor :left, :right, :parent, :description, :value
 
-    def initialize(text_label, data_value)
-      @label  = text_label
+    def initialize(text_description, data_value)
+      @description  = text_description
       @value  = data_value
       tmp = EmptyNode.new
       @left   = tmp
@@ -22,7 +22,7 @@ module Heaps
     end
 
     def data
-      {label: label.dup, value: value.dup}
+      {description: description.dup, value: value.dup}
     end
 
     def to_s

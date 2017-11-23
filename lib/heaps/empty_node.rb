@@ -13,7 +13,7 @@ module Heaps
       -1
     end
 
-    def label
+    def description
       self.class.name
     end
 
@@ -34,7 +34,7 @@ module Heaps
     end
 
     def data
-      {label: label, value: value}
+      {description: description, value: value}
     end
 
     def data=(*)
