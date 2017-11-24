@@ -69,7 +69,8 @@ Benchmark.ips do |x|
   searchable = source_data[350..449] + source_data[50..99] + source_data[250..274].each {|n| n[1] *= 2 }
   searchnodes = source_nodes[350..449] + source_nodes[50..99] + source_nodes[250..274].each {|n| n.value *= 2 }
 
-  heap = Heaps::MinimumHeap.new(source_nodes)
+  min_heap = Heaps::MinHeap.new(source_nodes)
+  max_heap = Heaps::MaxHeap.new(source_nodes)
 
   x.report('Array Ary') do
     searchable.each do |sa|
@@ -77,15 +78,27 @@ Benchmark.ips do |x|
     end
   end
 
-  x.report('MinimumHeap Ary') do
+  x.report('MinHeap Ary') do
     searchable.each do |sa|
-      heap.include?(sa, true)
+      min_heap.include?(sa, true)
     end
   end
 
-  x.report('MinimumHeap Node') do
+  x.report('MinHeap Node') do
     searchnodes.each do |nd|
-      heap.include?(nd, true)
+      min_heap.include?(nd, true)
+    end
+  end
+
+  x.report('MaxHeap Ary') do
+    searchable.each do |sa|
+      max_heap.include?(sa, true)
+    end
+  end
+
+  x.report('MaxHeap Node') do
+    searchnodes.each do |nd|
+      max_heap.include?(nd, true)
     end
   end
 

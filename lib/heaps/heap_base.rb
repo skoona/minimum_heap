@@ -1,5 +1,5 @@
 ##
-# File: <root>/lib/heaps/minimum_heap.rb
+# File: <root>/lib/heaps/heap_base.rb
 ##
 #
 # A min-heap is a binary tree data structure in which the data of each node is less than or
@@ -47,7 +47,7 @@
 
 module Heaps
 
-  class MinimumHeap
+  class HeapBase
 
     attr_reader :root
 
@@ -59,11 +59,18 @@ module Heaps
     end
 
     # Presumed input - one or more: [['description', value],...] | [{description: 'description', value: value},...]
-    def initialize(args=[])
+    def initialize(args=[], max_min_type=false)
       @size = 0
       @root = Heaps::EmptyNode.new
       @last_node = @root
       @output_log = false
+
+      # determine Heap Type, default is MinHeap
+      if max_min_type
+        @comparator = proc { |a, b| a < b }   # Maximum
+      else
+        @comparator = proc { |a, b| a > b }   # Minimum
+      end
 
       unless args.empty?
         case args.first
@@ -73,6 +80,7 @@ module Heaps
             args.each {|udata| push( udata ) }
         end
       end
+
       true
     end
 
@@ -205,16 +213,18 @@ module Heaps
     ##
 
     def valid_node(user_data)
-      case user_data
-        when Array
-          Heaps::Node.new( user_data.first, user_data.last)
-        when Hash
-          Heaps::Node.new(user_data[:description], user_data[:value])
-        when Heaps::Node
-          user_data
-        else
-          nil
-      end
+      node = case user_data
+               when Array
+                 Heaps::Node.new( user_data.first, user_data.last)
+               when Hash
+                 Heaps::Node.new(user_data[:description], user_data[:value])
+               when Heaps::Node
+                 user_data
+               else
+                 nil
+             end
+      node.instance_variable_set(:@comparator, @comparator) unless node.nil?
+      node
     end
 
     # Computes row/col to place this node

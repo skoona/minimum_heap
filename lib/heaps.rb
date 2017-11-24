@@ -10,7 +10,9 @@ require "heaps/version"
 require "heaps/base_node"
 require "heaps/node"
 require "heaps/empty_node"
-require "heaps/minimum_heap"
+require "heaps/heap_base"
+require "heaps/min_heap"
+require "heaps/max_heap"
 
 module Heaps
 

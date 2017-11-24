@@ -73,14 +73,6 @@ module Heaps
       []
     end
 
-    def <(*)
-      false
-    end
-
-    def >(*)
-      false
-    end
-
     def ==(*)
       false
     end

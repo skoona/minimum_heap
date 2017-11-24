@@ -1,8 +1,7 @@
-
 require "spec_helper"
 
+shared_context "heap commons" do
 
-RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array storage" do
   let (:root) { ["The Matrix", 70] }
 
   let (:node1) { ["Pacific Rim", 72] }
@@ -24,6 +23,7 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
 
   let (:tree) { described_class.new(root) }
   let (:heap_prop) { heap_prop = described_class.new([node3, node4, node5, node11, root, node1]) }
+
 
   context "Initialization " do
     it "has a version number" do
@@ -66,6 +66,11 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
       expect{tree.pop}.to output(/Removing Node/).to_stdout
       tree.instance_variable_set(:@output_log, false)
       expect{tree.pop}.to_not output(/Removing Node/).to_stdout
+    end
+
+    it "tree will not accept an invalid node or user inlut" do
+      expect( tree.push("some invalid stuff") ).to be_nil
+      expect(tree.push(nil)).to be_nil
     end
 
   end
@@ -148,149 +153,6 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
     end
   end
 
-  context "Insert User Data " do
-
-    it "#push maintains Heap Property across complete and balanced tree: structured." do
-      tree.push(node1)
-      tree.push(node2)
-      tree.push(node3)
-      tree.push(node4)
-      tree.push(node5)
-      tree.push(node6)
-      tree.push(node7)
-      tree.push(node8)
-      tree.push(node9)
-      tree.push(node10)
-      tree.push(node11)
-      tree.push(node12)
-      tree.push(node13)
-      tree.push(node14)
-      tree.push(node15)
-      exp_out = '{70:{72:{80:{91:{102:{}|{}}|{}}|{92:{}|{}}}|{85:{93:{}|{}}|{94:{}|{}}}}|{78:{86:{98:{}|{}}|{99:{}|{}}}|{90:{100:{}|{}}|{101:{}|{}}}}}'
-      expect(tree.inspect).to eq(exp_out)
-    end
-
-    it "#push maintains Heap Property across complete and balanced tree: unstructured." do
-      tree.push(node9)
-      tree.push(node10)
-      tree.push(node11)
-      tree.push(node12)
-      tree.push(node13)
-      tree.push(node14)
-      tree.push(node15)
-      tree.push(node1)
-      tree.push(node2)
-      tree.push(node3)
-      tree.push(node4)
-      tree.push(node5)
-      tree.push(node6)
-      tree.push(node7)
-      tree.push(node8)
-      exp_out = '{70:{72:{78:{92:{98:{}|{}}|{}}|{102:{}|{}}}|{80:{93:{}|{}}|{99:{}|{}}}}|{85:{86:{94:{}|{}}|{100:{}|{}}}|{90:{91:{}|{}}|{101:{}|{}}}}}'
-      expect(tree.inspect).to eq(exp_out)
-    end
-
-  end
-
-  context "Heap Property Operations" do
-
-    it "#node_path_navigation returns desired node. " do
-      expect(heap_prop.peek[:value]).to eq(70)
-      expect(heap_prop.size).to eq(6)
-      expect( heap_prop.send(:node_path_navigation, 4, false).value ).to eq(85)
-      expect(heap_prop.size).to eq(6)
-    end
-
-    it "#push will not overwrite existing node on new insert. " do
-      expect(heap_prop.peek[:value]).to eq(70)
-      expect(heap_prop.size).to eq(6)
-      expect{ heap_prop.send(:insert_node_on_path, Heaps::Node.new(node4.first, node4.last), 4) }.to raise_error(ArgumentError)
-      expect(heap_prop.size).to eq(6)
-    end
-
-    it "#maintains Heap Property for nodes added." do
-      heap_prop = described_class.new(node3)
-      puts heap_prop.inspect
-
-      heap_prop.push(node4)
-      puts heap_prop.inspect
-
-      heap_prop.push(node5)
-      puts heap_prop.inspect
-
-      heap_prop.push(node11)
-      puts heap_prop.inspect
-
-      heap_prop.push(root)
-      puts heap_prop.inspect
-
-      heap_prop.push(node1)
-      puts heap_prop.inspect
-
-      tree.push(node7)
-      puts heap_prop.inspect
-
-      expect(heap_prop.peek[:value]).to eq(70)
-    end
-
-    it "#maintains Heap Property for nodes removed." do
-      expect(heap_prop.peek[:value]).to eq(70)
-      expect(heap_prop.size).to eq(6)
-
-      expect(heap_prop.pop[:value]).to eq(70)
-
-      expect(heap_prop.peek[:value]).to eq(72)
-      expect(heap_prop.size).to eq(5)
-    end
-
-    it "#pop remove nodes in ascending order" do
-      expected_array = [{:description=>"The Matrix", :value=>70}, {:description=>"Pacific Rim", :value=>72}, {:description=>"Star Wars: Return of the Jedi", :value=>80}, {:description=>"Donnie Darko", :value=>85}, {:description=>"Inception", :value=>86}, {:description=>"Mad Max 2: The Road Warrior", :value=>98}]
-      actual_array = []
-      while !heap_prop.empty? do
-        actual_array << heap_prop.pop
-      end
-      expect(actual_array).to match_array expected_array
-    end
-
-    it "#replace! removes root node and immediately replaces it with this new node" do
-      expect(heap_prop.peek[:value]).to eq(70)
-      expect(heap_prop.size).to eq(6)
-
-      expect(heap_prop.replace!(node15)[:value]).to eq(70)
-
-      expect(heap_prop.peek[:value]).to eq(72)
-      expect(heap_prop.size).to eq(6)
-    end
-
-    it "#clear! removes all nodes in heap" do
-      expect(heap_prop.peek[:value]).to eq(70)
-      expect(heap_prop.size).to eq(6)
-      expect(heap_prop.empty?).to be false
-
-      expect(heap_prop.clear!).to be_nil
-
-      expect(heap_prop.empty?).to be true
-      expect(heap_prop.size).to eq(0)
-    end
-
-    it "#include? finds requested node from array, hash, or node input. " do
-      expect(heap_prop.include?(["Mad Max 2: The Road Warrior", 98], true)).to be_a(Heaps::Node)
-      expect(heap_prop.include?({:description=>"Mad Max 2: The Road Warrior", :value=>98}, true)).to be_a(Heaps::Node)
-      expect(heap_prop.include?(node11, true)).to be_a(Heaps::Node)
-      expect(heap_prop.include?(node11)).to eq({:description=>"Mad Max 2: The Road Warrior", :value=>98})
-    end
-
-    it "#delete! removes node matching input user_data. " do
-      expect(heap_prop.size).to eq(6)
-
-      expect(heap_prop.delete!(["Mad Max 2: The Road Warrior", 98])).to eq({:description=>"Mad Max 2: The Road Warrior", :value=>98})
-
-      expect(heap_prop.peek[:value]).to eq(70)
-      expect(heap_prop.size).to eq(5)
-    end
-
-  end
-
   context "Heap Transforms " do
 
     it "#merge returns a new heap composed of this heap and other. " do
@@ -346,7 +208,6 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
     it "#display prints the user data of each node in the current Minimum Heap. " do
       expect(heap_prop.display).to match_array [{:description=>"The Matrix", :value=>70}, {:description=>"Pacific Rim", :value=>72}, {:description=>"Star Wars: Return of the Jedi", :value=>80}, {:description=>"Donnie Darko", :value=>85}, {:description=>"Inception", :value=>86}, {:description=>"Mad Max 2: The Road Warrior", :value=>98}]
     end
-
   end
 
 end
@@ -354,3 +215,4 @@ end
 # {:description=>"Mad Max 2: The Road Warrior", :value=>98}, {:description=>"Pacific Rim", :value=>72}, {:description=>"Star Wars: Return of the Jedi", :value=>80}, {:description=>"Donnie Darko", :value=>85}, {:description=>"The Matrix", :value=>70}, {:description=>"Inception", :value=>86}
 
 # {:description=>"Star Trek: Next Generation", :value=>102}, {:description=>"The Matrix", :value=>70}, {:description=>"Pacific Rim", :value=>72}, {:description=>"Star Wars: Return of the Jedi", :value=>80}, {:description=>"Mad Max 2: The Road Warrior", :value=>98}, {:description=>"The Shawshank Redemption", :value=>91}, {:description=>"Donnie Darko", :value=>85}, {:description=>"Star Wars: A New Hope", :value=>93}, {:description=>"Star Wars: The Empire Strikes Back", :value=>94}, {:description=>"Braveheart", :value=>78}, {:description=>"Inception", :value=>86}, {:description=>"Star Trek: Voyager", :value=>100}, {:description=>"Star Trek: Star Trek", :value=>99}, {:description=>"District 9", :value=>90}, {:description=>"Star Trek: Deep Space 9", :value=>101}, {:description=>"The Martian", :value=>92}
+

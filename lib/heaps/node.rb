@@ -19,14 +19,7 @@ module Heaps
       @left   = tmp
       @right  = tmp
       @parent = tmp
-
-      # determine Heap Type, default is MinHeap
-      if max_min_type
-        @comparator = proc { |a, b| a < b }   # Maximum
-      else
-        @comparator = proc { |a, b| a > b }   # Minimum
-      end
-
+      @comparator = proc { |a, b| a > b }   # Minimum as default
     end
 
     ##
