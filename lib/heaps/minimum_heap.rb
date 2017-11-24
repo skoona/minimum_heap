@@ -16,7 +16,7 @@
 #
 ## Details
 #
-#  Row  Row.Cnt  Tree.Cap
+#  Row  Max.Cols  Tree.Cap
 #    0      1         1                                      1
 #                                                    /                 \
 #    1      2         3                       2                               3
@@ -188,13 +188,13 @@ module Heaps
     end
     alias_method :to_s, :inspect
 
-    def to_a
-      @root.dfs_pre_order
+    def to_a(node=@root)
+      node.dfs_pre_order
     end
 
     def display(node=@root)
-      node.dfs_pre_order.each do |item|
-        dlog item
+      to_a(node).each do |item|
+        dlog item.to_s
       end
     end
 
@@ -250,7 +250,8 @@ module Heaps
       nav_list = []
       while row < tgt_row do
         direction = ( tgt_col % 2 == 0 ) ? :right : :left
-        nav_list << direction
+        nav_list.unshift( direction ) unless insert_mode
+        insert_mode = false if insert_mode # stop one short of target on insert mode, by skipping first
         dlog("#{__method__} Row: #{tgt_row - row}, Direction: #{direction}, RowMax: #{tgt_row_max}, TargetColumn: #{tgt_col}")
 
         tgt_row_max = (tgt_row_max / 2)
@@ -258,13 +259,10 @@ module Heaps
         row += 1
       end
 
-      # stop one short of target on insert mode
-      nav_list.shift if insert_mode
-
-      # Currently Backwards, so reverse before use
+      # move to node
       nav_node = root
-      nav_list.reverse.each do |msg|     # navigate
-        nav_node = nav_node.send(msg)
+      nav_list.each do |nav|
+        nav_node = nav_node.send(nav)  # navigate
       end
 
       nav_node
@@ -279,7 +277,7 @@ module Heaps
 
       eval_node = node.parent
       while eval_node.valid? do
-        if (eval_node > node)
+        if eval_node.compare(node)
           node = balance_subtree( eval_node.swap_contents(node) )
           eval_node = node.parent
         else

@@ -74,15 +74,15 @@ module Heaps
     end
 
     def <(*)
-      nil
+      false
     end
 
     def >(*)
-      nil
+      false
     end
 
     def ==(*)
-      nil
+      false
     end
     alias_method  :eql?, :==
 

@@ -281,7 +281,6 @@ RSpec.describe Heaps::MinimumHeap, "Minimum Heap Implementation wihtout Array st
     end
 
     it "#delete! removes node matching input user_data. " do
-      expect(heap_prop.peek[:value]).to eq(70)
       expect(heap_prop.size).to eq(6)
 
       expect(heap_prop.delete!(["Mad Max 2: The Road Warrior", 98])).to eq({:description=>"Mad Max 2: The Road Warrior", :value=>98})

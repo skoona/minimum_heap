@@ -1,19 +1,40 @@
 ##
 # File: <root>/lib/heaps/node.rb
-
+#
 # Primary Tree Node
+#
+# MinHeap or MaxHeap is controled by compare proc:
+#  - proc {|a, b| b < a}    Minimum
+#  - proc {|a, b| b < a}    Maximum
+#
 module Heaps
 
   class  Node
     attr_accessor :left, :right, :parent, :description, :value
 
-    def initialize(text_description, data_value)
+    def initialize(text_description, data_value, max_min_type=false)
       @description  = text_description
       @value  = data_value
       tmp = EmptyNode.new
       @left   = tmp
       @right  = tmp
       @parent = tmp
+
+      # determine Heap Type, default is MinHeap
+      if max_min_type
+        @comparator = proc { |a, b| a < b }   # Maximum
+      else
+        @comparator = proc { |a, b| a > b }   # Minimum
+      end
+
+    end
+
+    ##
+    # State Operations
+    ##
+
+    def compare(b)
+      return @comparator.call(self, b)
     end
 
     def valid?
@@ -89,7 +110,7 @@ module Heaps
       nleft = nil
       nright = nil
 
-      if left.valid? and self > left                 # Must be more than parent:
+      if left.valid? and compare(left)                 # Must be more than parent:
         swap_contents(left)
       end
 
