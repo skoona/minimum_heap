@@ -68,7 +68,7 @@ shared_context "heap commons" do
       expect{tree.pop}.to_not output(/Removing Node/).to_stdout
     end
 
-    it "tree will not accept an invalid node or user inlut" do
+    it "tree will not accept an invalid node or user input" do
       expect( tree.push("some invalid stuff") ).to be_nil
       expect(tree.push(nil)).to be_nil
     end

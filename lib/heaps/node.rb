@@ -135,6 +135,7 @@ module Heaps
       self.value = nil
       self.left = nil
       self.right = nil
+      self.payload = nil
       if parent&.valid?                 # TODO: Ruby 2.4 feature 'obj&.method' nil safe
         if parent.left == self          # uncouple last node from tree
           parent.left = EmptyNode.new

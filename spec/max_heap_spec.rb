@@ -101,7 +101,7 @@ RSpec.describe Heaps::MaxHeap, "Maximum Heap Implementation wihtout Array storag
       expect(heap_prop.size).to eq(5)
     end
 
-    it "#pop remove nodes in ascending order" do
+    it "#pop remove nodes in descending order" do
       expected_array = [{:description=>"The Matrix", :value=>70, payload: {}}, {:description=>"Pacific Rim", :value=>72, payload: {}}, {:description=>"Star Wars: Return of the Jedi", :value=>80, payload: {}}, {:description=>"Donnie Darko", :value=>85, payload: {}}, {:description=>"Inception", :value=>86, payload: {}}, {:description=>"Mad Max 2: The Road Warrior", :value=>98, payload: {}}]
       actual_array = []
       while !heap_prop.empty? do
