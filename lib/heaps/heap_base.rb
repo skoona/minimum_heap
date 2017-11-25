@@ -77,7 +77,12 @@ module Heaps
           when String
             push( args )
           else
-            args.each {|udata| push( udata ) }
+            nodes = args.length
+            node = 0
+            while node < nodes do
+              push( args[node] )
+              node += 1
+            end
         end
       end
 
@@ -157,8 +162,12 @@ module Heaps
     # this_heap = this + other, retaining other intact
     def merge!(other_heap)
       return nil unless other_heap.is_a?(self.class)
-      other_heap.to_a.each do |user_data|
-        push(user_data)
+      args = other_heap.to_a
+      nodes = args.length
+      node = 0
+      while node < nodes do
+        push( args[node] )
+        node += 1
       end
       self
     end
@@ -178,7 +187,7 @@ module Heaps
     def include?(user_data, node_only=false)
       node = valid_node(user_data)
       return nil if node.nil?
-      node = root.include?(node)
+      node = @root.include?(node)
       node&.valid? ? (node_only ? node : node.to_s) : nil
     end
 
@@ -265,8 +274,11 @@ module Heaps
 
       # move to node
       nav_node = root
-      for nav in nav_list do
-        nav_node = nav_node.send(nav)  # navigate
+      move = 0
+      moves = nav_list.length
+      while move < moves do
+        nav_node = nav_node.send(nav_list[move])  # navigate
+        move += 1
       end
 
       nav_node

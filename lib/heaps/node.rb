@@ -165,7 +165,9 @@ module Heaps
     end
 
     def ==(other)
-      self.class === other and hash == other.hash
+      self.class === other and
+          description == other.description and
+            value == other.value
     end
     alias_method  :eql?, :==
 
@@ -175,10 +177,6 @@ module Heaps
 
     def >(other)
       (self <=> other) > 0
-    end
-
-    def hash
-      description.hash ^ value.hash # XOR
     end
 
   private

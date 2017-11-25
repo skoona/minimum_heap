@@ -34,7 +34,7 @@ module Heaps
     end
 
     def data
-      {description: description, value: value}
+      {description: 'Empty Node', value: -1, payload: {}}
     end
 
     def data=(*)
