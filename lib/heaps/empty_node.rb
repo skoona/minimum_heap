@@ -14,7 +14,7 @@ module Heaps
     end
 
     def description
-      self.class.name
+      'Empty Node'
     end
 
     def left(*)
@@ -34,7 +34,7 @@ module Heaps
     end
 
     def data
-      {description: 'Empty Node', value: -1, payload: {}}
+      {description: description, value: value, payload: {}}
     end
 
     def data=(*)
