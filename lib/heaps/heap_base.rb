@@ -113,7 +113,7 @@ module Heaps
     end
 
     def peek
-      @root.data
+      @root.to_s
     end
 
     # Remove root and immediately replace with user_data, i.e. new_node
@@ -200,12 +200,6 @@ module Heaps
       node.dfs_pre_order
     end
 
-    def display(node=@root)
-      to_a(node).each do |item|
-        dlog item.to_s
-      end
-    end
-
     private
 
     ##
@@ -215,9 +209,9 @@ module Heaps
     def valid_node(user_data)
       node = case user_data
                when Array
-                 Heaps::Node.new( user_data.first, user_data.last)
+                 Heaps::Node.new( user_data.first, user_data.last )
                when Hash
-                 Heaps::Node.new(user_data[:description], user_data[:value])
+                 Heaps::Node.new(user_data[:description], user_data[:value], user_data[:payload])
                when Heaps::Node
                  user_data
                else
@@ -238,12 +232,12 @@ module Heaps
       [row_number, target_column, row_max_count, tree_capacity]
     end
 
-    def insert_node_on_path(node, insert_position=@size)
+    def insert_node_on_path(node, insert_position)
       nav_node = node_path_navigation(insert_position, true)
-      raise ArgumentError, "#{__method__} Failed to locate an opening to insert node: #{node.to_s}" if nav_node.nil? or !nav_node.valid?
+      raise ArgumentError, "#{__method__} Failed to locate an opening to insert node: #{node.to_s} via #{nav_node.to_s}" if nav_node.nil? or !nav_node.valid?
 
       node = nav_node.insert_node(node)
-      raise ArgumentError, "#{__method__} Failed to insert node: #{node.to_s}" if nav_node == node
+      raise ArgumentError, "#{__method__} Failed to insert node: #{node.to_s} via #{nav_node.to_s}" if nav_node == node
 
       @last_node = node
 
@@ -271,7 +265,7 @@ module Heaps
 
       # move to node
       nav_node = root
-      nav_list.each do |nav|
+      for nav in nav_list do
         nav_node = nav_node.send(nav)  # navigate
       end
 

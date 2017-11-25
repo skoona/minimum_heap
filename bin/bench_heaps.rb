@@ -58,19 +58,22 @@ Benchmark.ips do |x|
     inc.even? ? source_data.push(data) : source_data.unshift(data)
   end
   
-  source_nodes = []
+  max_nodes = []
+  min_nodes = []
   source_data.each do |parms|
-    source_nodes << Heaps::Node.new(parms.first, parms.last) 
+    max_nodes << Heaps::Node.new(parms.first, parms.last)
+    min_nodes << Heaps::Node.new(parms.first, parms.last)
   end
 
   # Compose a balanced workload of 125 items from the internal group of 500
   # Gather search items from front and tail, with some not-findables
 
   searchable = source_data[350..449] + source_data[50..99] + source_data[250..274].each {|n| n[1] *= 2 }
-  searchnodes = source_nodes[350..449] + source_nodes[50..99] + source_nodes[250..274].each {|n| n.value *= 2 }
+  max_searchnodes = max_nodes[350..449] + max_nodes[50..99] + max_nodes[250..274].each {|n| n.value *= 2 }
+  min_searchnodes = min_nodes[350..449] + min_nodes[50..99] + min_nodes[250..274].each {|n| n.value *= 2 }
 
-  min_heap = Heaps::MinHeap.new(source_nodes)
-  max_heap = Heaps::MaxHeap.new(source_nodes)
+  min_heap = Heaps::MinHeap.new(min_nodes)
+  max_heap = Heaps::MaxHeap.new(max_nodes)
 
   x.report('Array Ary') do
     searchable.each do |sa|
@@ -85,7 +88,7 @@ Benchmark.ips do |x|
   end
 
   x.report('MinHeap Node') do
-    searchnodes.each do |nd|
+    min_searchnodes.each do |nd|
       min_heap.include?(nd, true)
     end
   end
@@ -97,7 +100,7 @@ Benchmark.ips do |x|
   end
 
   x.report('MaxHeap Node') do
-    searchnodes.each do |nd|
+    max_searchnodes.each do |nd|
       max_heap.include?(nd, true)
     end
   end

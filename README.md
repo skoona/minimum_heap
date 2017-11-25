@@ -52,11 +52,11 @@ To experiment with this code, execute `bin/console` for an interactive prompt.
 
 ```ruby
 ####
-# Console Run
+# Interactive Console Run
 ####
 [jscott@imac MinimumHeap]$ bin/console
 
-[1] pry(main)> heap = Heaps::MinimumHeap.new([{:description=>"Star Trek: Next Generation", :value=>102}, {:description=>"The Matrix", :value=>70}, {:description=>"Pacific Rim", :value=>72},
+[1] pry(main)> heap = Heaps::MinHeap.new([{:description=>"Star Trek: Next Generation", :value=>102}, {:description=>"The Matrix", :value=>70}, {:description=>"Pacific Rim", :value=>72},
         {:description=>"Star Wars: Return of the Jedi", :value=>80}, {:description=>"Mad Max 2: The Road Warrior", :value=>98}, {:description=>"The Shawshank Redemption", :value=>91},
         {:description=>"Donnie Darko", :value=>85}, {:description=>"Star Wars: A New Hope", :value=>93}, {:description=>"Star Wars: The Empire Strikes Back", :value=>94}, {:description=>"Braveheart", :value=>78},
         {:description=>"Inception", :value=>86}, {:description=>"Star Trek: Voyager", :value=>100}, {:description=>"Star Trek: Star Trek", :value=>99}, {:description=>"District 9", :value=>90},
@@ -123,91 +123,91 @@ push Inserted at R/C/mR/cT => [4, 1, 16, 31], Node => {:description=>"The Martia
 
 [6] pry(main)> heap.pop
 Removing Node: {:description=>"The Matrix", :value=>70}
-=> {:description=>"The Matrix", :value=>70}
+=> {:description=>"The Matrix", :value=>70, payload: {} }}
 
 [7] pry(main)> heap.inspect
 => "{72:{78:{80:{92:{}|{}}|{94:{}|{}}}|{85:{86:{}|{}}|{98:{}|{}}}}|{90:{91:{99:{}|{}}|{100:{}|{}}}|{93:{101:{}|{}}|{102:{}|{}}}}}"
 
 [8] pry(main)> heap.pop
 Removing Node: {:description=>"Pacific Rim", :value=>72}
-=> {:description=>"Pacific Rim", :value=>72}
+=> {:description=>"Pacific Rim", :value=>72, payload: {} }
 
 [9] pry(main)> heap.inspect
 => "{78:{80:{85:{92:{}|{}}|{94:{}|{}}}|{86:{90:{}|{}}|{98:{}|{}}}}|{91:{93:{99:{}|{}}|{100:{}|{}}}|{101:{102:{}|{}}|{}}}}"
 
 [10] pry(main)> heap.pop
 Removing Node: {:description=>"Braveheart", :value=>78}
-=> {:description=>"Braveheart", :value=>78}
+=> {:description=>"Braveheart", :value=>78, payload: {} }
 
 [11] pry(main)> heap.inspect
 => "{80:{85:{86:{92:{}|{}}|{94:{}|{}}}|{90:{91:{}|{}}|{98:{}|{}}}}|{93:{99:{100:{}|{}}|{101:{}|{}}}|{102:{}|{}}}}"
 
 [12] pry(main)> heap.pop
 Removing Node: {:description=>"Star Wars: Return of the Jedi", :value=>80}
-=> {:description=>"Star Wars: Return of the Jedi", :value=>80}
+=> {:description=>"Star Wars: Return of the Jedi", :value=>80, payload: {} }
 
 [13] pry(main)> heap.inspect
 => "{85:{86:{90:{92:{}|{}}|{94:{}|{}}}|{91:{93:{}|{}}|{98:{}|{}}}}|{99:{100:{101:{}|{}}|{102:{}|{}}}|{}}}"
 
 [14] pry(main)> heap.pop
 Removing Node: {:description=>"Donnie Darko", :value=>85}
-=> {:description=>"Donnie Darko", :value=>85}
+=> {:description=>"Donnie Darko", :value=>85, payload: {} }
 
 [15] pry(main)> heap.inspect
 => "{86:{90:{91:{92:{}|{}}|{94:{}|{}}}|{93:{98:{}|{}}|{99:{}|{}}}}|{100:{101:{102:{}|{}}|{}}|{}}}"
 
 [16] pry(main)> heap.pop
 Removing Node: {:description=>"Inception", :value=>86}
-=> {:description=>"Inception", :value=>86}
+=> {:description=>"Inception", :value=>86, payload: {} }
 
 [17] pry(main)> heap.inspect
 => "{90:{91:{92:{93:{}|{}}|{94:{}|{}}}|{98:{99:{}|{}}|{100:{}|{}}}}|{101:{102:{}|{}}|{}}}"
 
 [18] pry(main)> heap.pop
 Removing Node: {:description=>"District 9", :value=>90}
-=> {:description=>"District 9", :value=>90}
+=> {:description=>"District 9", :value=>90, payload: {} }
 
 [19] pry(main)> heap.inspect
 => "{91:{92:{93:{94:{}|{}}|{98:{}|{}}}|{99:{100:{}|{}}|{101:{}|{}}}}|{102:{}|{}}}"
 
 [20] pry(main)> heap.pop
 Removing Node: {:description=>"The Shawshank Redemption", :value=>91}
-=> {:description=>"The Shawshank Redemption", :value=>91}
+=> {:description=>"The Shawshank Redemption", :value=>91, payload: {} }
 
 [21] pry(main)> heap.inspect
 => "{92:{93:{94:{98:{}|{}}|{99:{}|{}}}|{100:{101:{}|{}}|{102:{}|{}}}}|{}}"
 
 [22] pry(main)> heap.pop
 Removing Node: {:description=>"The Martian", :value=>92}
-=> {:description=>"The Martian", :value=>92}
+=> {:description=>"The Martian", :value=>92, payload: {} }
 
 [23] pry(main)> heap.inspect
 => "{93:{94:{98:{99:{}|{}}|{100:{}|{}}}|{101:{102:{}|{}}|{}}}|{}}"
 
 [24] pry(main)> heap.pop
 Removing Node: {:description=>"Star Wars: A New Hope", :value=>93}
-=> {:description=>"Star Wars: A New Hope", :value=>93}
+=> {:description=>"Star Wars: A New Hope", :value=>93, payload: {} }
 
 [25] pry(main)> heap.inspect
 => "{94:{98:{99:{100:{}|{}}|{101:{}|{}}}|{102:{}|{}}}|{}}"
 
 [26] pry(main)> heap.pop
 Removing Node: {:description=>"Star Wars: The Empire Strikes Back", :value=>94}
-=> {:description=>"Star Wars: The Empire Strikes Back", :value=>94}
+=> {:description=>"Star Wars: The Empire Strikes Back", :value=>94, payload: {} }
 
 [27] pry(main)> heap.inspect
 => "{98:{99:{100:{101:{}|{}}|{102:{}|{}}}|{}}|{}}"
 
 [28] pry(main)> heap.pop
 Removing Node: {:description=>"Mad Max 2: The Road Warrior", :value=>98}
-=> {:description=>"Mad Max 2: The Road Warrior", :value=>98}
+=> {:description=>"Mad Max 2: The Road Warrior", :value=>98, payload: {} }
 
 [29] pry(main)> heap.inspect
 => "{99:{100:{101:{102:{}|{}}|{}}|{}}|{}}"
 
 [30] pry(main)> heap.pop
 Removing Node: {:description=>"Star Trek: Star Trek", :value=>99}
-=> {:description=>"Star Trek: Star Trek", :value=>99}
+=> {:description=>"Star Trek: Star Trek", :value=>99, payload: {} }
 
 [31] pry(main)> heap.inspect
 => "{100:{101:{102:{}|{}}|{}}|{}}"
@@ -222,9 +222,26 @@ $
 $ bundle exec rspec
 $ open docs/rspec.html
 $ open coverage/index.html
-$ bin/bench_minimum_heap
+$ bin/bench_heaps
 $ bin/nodes
 
+# Resources
+# Class
+# - MinHeap
+# - MaxHeap
+##
+# Useage:
+#
+#      heap = Heaps::MinHeap.new   |      heap = Heaps::MaxHeap.new
+#
+#               heap.push("label-text", 12, SomeObjectOrDataPayload)
+#               heap.push("label-text", 45, SomeObjectOrDataPayload)
+#               while heap.size do
+#                 heap.pop
+#               end
+#
+# Heap will be empty, as #pop deletes each node returned
+##
 
 ####
 # Ideal Interface
@@ -234,11 +251,11 @@ $ bin/nodes
 #   * Examples:
 #   *          ['Movie Title", 12]
 #   *          [ ['Movie Title", 12], ... ]
-#   *          [ {description: 'Movie Title", value: 12}, ... ]
-#   *          [ Heaps::Node.new('Movie Title", 12), ... ]
+#   *          [ {description: 'Movie Title", value: 12, payload: any-type-of-data} }, ... ]
+#   *          [ Heaps::Node.new('Movie Title", 12, any-type-of-data), ... ]
 ####
 module Heaps
-    class MinimumHeap
+    class MinHeap
        def self.heapify(user_data_ary)
        end
        def initialize(args=[])

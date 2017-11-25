@@ -202,11 +202,7 @@ shared_context "heap commons" do
     end
 
     it "#to_a returns and array representing the current Minimum Heap. " do
-      expect(heap_prop.to_a).to match_array [{:description=>"The Matrix", :value=>70}, {:description=>"Pacific Rim", :value=>72}, {:description=>"Star Wars: Return of the Jedi", :value=>80}, {:description=>"Donnie Darko", :value=>85}, {:description=>"Inception", :value=>86}, {:description=>"Mad Max 2: The Road Warrior", :value=>98}]
-    end
-
-    it "#display prints the user data of each node in the current Minimum Heap. " do
-      expect(heap_prop.display).to match_array [{:description=>"The Matrix", :value=>70}, {:description=>"Pacific Rim", :value=>72}, {:description=>"Star Wars: Return of the Jedi", :value=>80}, {:description=>"Donnie Darko", :value=>85}, {:description=>"Inception", :value=>86}, {:description=>"Mad Max 2: The Road Warrior", :value=>98}]
+      expect(heap_prop.to_a).to match_array [{:description=>"The Matrix", :value=>70, :payload=>{}}, {:description=>"Pacific Rim", :value=>72, :payload=>{}}, {:description=>"Star Wars: Return of the Jedi", :value=>80, :payload=>{}}, {:description=>"Donnie Darko", :value=>85, :payload=>{}}, {:description=>"Inception", :value=>86, :payload=>{}}, {:description=>"Mad Max 2: The Road Warrior", :value=>98, :payload=>{}}]
     end
   end
 

@@ -10,11 +10,12 @@
 module Heaps
 
   class  Node
-    attr_accessor :left, :right, :parent, :description, :value
+    attr_accessor :left, :right, :parent, :description, :value, :payload
 
-    def initialize(text_description, data_value, max_min_type=false)
+    def initialize(text_description, data_value, payload={})
       @description  = text_description
       @value  = data_value
+      @payload = payload
       tmp = EmptyNode.new
       @left   = tmp
       @right  = tmp
@@ -41,11 +42,12 @@ module Heaps
     def data=(other_hash)
       self.description = other_hash[:description]
       self.value = other_hash[:value]
+      self.payload = other_hash[:payload]
       nil
     end
 
     def data
-      {description: description.dup, value: value.dup}
+      {description: description.dup, value: value.dup, payload: payload}
     end
 
     def to_s
@@ -84,7 +86,7 @@ module Heaps
     # - Supporting #to_a
     # https://medium.freecodecamp.org/all-you-need-to-know-about-tree-data-structures-bceacb85490c
     def dfs_pre_order(collector=[])
-      collector << data
+      collector << self.to_s
 
       if left.valid?
         left.dfs_pre_order(collector)

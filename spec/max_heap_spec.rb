@@ -102,7 +102,7 @@ RSpec.describe Heaps::MaxHeap, "Maximum Heap Implementation wihtout Array storag
     end
 
     it "#pop remove nodes in ascending order" do
-      expected_array = [{:description=>"The Matrix", :value=>70}, {:description=>"Pacific Rim", :value=>72}, {:description=>"Star Wars: Return of the Jedi", :value=>80}, {:description=>"Donnie Darko", :value=>85}, {:description=>"Inception", :value=>86}, {:description=>"Mad Max 2: The Road Warrior", :value=>98}]
+      expected_array = [{:description=>"The Matrix", :value=>70, payload: {}}, {:description=>"Pacific Rim", :value=>72, payload: {}}, {:description=>"Star Wars: Return of the Jedi", :value=>80, payload: {}}, {:description=>"Donnie Darko", :value=>85, payload: {}}, {:description=>"Inception", :value=>86, payload: {}}, {:description=>"Mad Max 2: The Road Warrior", :value=>98, payload: {}}]
       actual_array = []
       while !heap_prop.empty? do
         actual_array << heap_prop.pop
@@ -135,13 +135,13 @@ RSpec.describe Heaps::MaxHeap, "Maximum Heap Implementation wihtout Array storag
       expect(heap_prop.include?(["Mad Max 2: The Road Warrior", 98], true)).to be_a(Heaps::Node)
       expect(heap_prop.include?({:description=>"Mad Max 2: The Road Warrior", :value=>98}, true)).to be_a(Heaps::Node)
       expect(heap_prop.include?(node11, true)).to be_a(Heaps::Node)
-      expect(heap_prop.include?(node11)).to eq({:description=>"Mad Max 2: The Road Warrior", :value=>98})
+      expect(heap_prop.include?(node11)).to eq({:description=>"Mad Max 2: The Road Warrior", :value=>98, :payload=>{}})
     end
 
     it "#delete! removes node matching input user_data. " do
       expect(heap_prop.size).to eq(6)
 
-      expect(heap_prop.delete!(["Mad Max 2: The Road Warrior", 98])).to eq({:description=>"Mad Max 2: The Road Warrior", :value=>98})
+      expect(heap_prop.delete!(["Mad Max 2: The Road Warrior", 98])).to eq({:description=>"Mad Max 2: The Road Warrior", :value=>98, payload: {}})
 
       expect(heap_prop.peek[:value]).to eq(86)
       expect(heap_prop.size).to eq(5)
