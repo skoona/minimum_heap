@@ -197,8 +197,8 @@ shared_context "heap commons" do
       expect(hp_merged.size).to eq(hp2_size + hp1_size)
       expect(hp1.size).to eq(0)
       expect(hp2.size).to eq(0)
-      expect(hp1.root).to be_a(Heaps::EmptyNode)
-      expect(hp2.root).to be_a(Heaps::EmptyNode)
+      expect(hp1.instance_variable_get(:@root)).to be_a(Heaps::EmptyNode)
+      expect(hp2.instance_variable_get(:@root)).to be_a(Heaps::EmptyNode)
     end
 
     it "#to_a returns and array representing the current Minimum Heap. " do

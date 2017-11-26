@@ -6,6 +6,9 @@
 # MinHeap or MaxHeap is controled by compare proc:
 #  - proc {|a, b| b < a}    Minimum
 #  - proc {|a, b| b < a}    Maximum
+##
+# User data includes :description, :value, and :payload
+# - :description and :payload are not used in comparisons related to heap operations
 #
 module Heaps
 
@@ -165,9 +168,7 @@ module Heaps
     end
 
     def ==(other)
-      self.class === other and
-          description == other.description and
-            value == other.value
+      self.class == other.class and value == other.value
     end
     alias_method  :eql?, :==
 

@@ -49,8 +49,6 @@ module Heaps
 
   class HeapBase
 
-    attr_reader :root
-
     ##
     # Class Creates
     ##
@@ -96,7 +94,7 @@ module Heaps
       node = valid_node( user_data)
       return nil if node.nil?
 
-      unless root.nil? or root.valid?
+      unless @root.nil? or @root.valid?
         @root = node
         @size = 1
         dlog "#{__method__} Inserted at R/C/mR/cT => #{insert_positions}, Root.Node => #{node.to_s}, Node.Parent => #{node.parent.to_s}"
@@ -141,7 +139,7 @@ module Heaps
     # Drops all tree references in every tree node,
     # - expecting GC to cleanup disconnected nodes
     def clear!
-      root.clean(true)
+      @root.clean(true)
       @root = empty_object
       @last_node = @root
       @size = 0
@@ -255,7 +253,7 @@ module Heaps
 
     # navigate directly to node number(size)
     def node_path_navigation(number_nodes, insert_mode=false)
-      return root if number_nodes <= 1
+      return @root if number_nodes <= 1
 
       tgt_row, tgt_col, tgt_row_max, tgt_cap = insert_positions(number_nodes)
 
@@ -273,7 +271,7 @@ module Heaps
       end
 
       # move to node
-      nav_node = root
+      nav_node = @root
       move = 0
       moves = nav_list.length
       while move < moves do
