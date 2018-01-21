@@ -104,24 +104,6 @@ push Inserted at R/C/mR/cT => [4, 1, 16, 31], Node => {:description=>"The Martia
  {:description=>"Star Trek: Deep Space 9", :value=>101},
  {:description=>"Star Trek: Next Generation", :value=>102}]
 
-[5] pry(main)> heap.display
-=> {:description=>"The Matrix", :value=>70},
- {:description=>"Pacific Rim", :value=>72},
- {:description=>"Braveheart", :value=>78},
- {:description=>"The Martian", :value=>92},
- {:description=>"Star Wars: A New Hope", :value=>93},
- {:description=>"Star Wars: The Empire Strikes Back", :value=>94},
- {:description=>"Star Wars: Return of the Jedi", :value=>80},
- {:description=>"Inception", :value=>86},
- {:description=>"Mad Max 2: The Road Warrior", :value=>98},
- {:description=>"Donnie Darko", :value=>85},
- {:description=>"District 9", :value=>90},
- {:description=>"Star Trek: Star Trek", :value=>99},
- {:description=>"Star Trek: Voyager", :value=>100},
- {:description=>"The Shawshank Redemption", :value=>91},
- {:description=>"Star Trek: Deep Space 9", :value=>101},
- {:description=>"Star Trek: Next Generation", :value=>102}
-
 [6] pry(main)> heap.pop
 Removing Node: {:description=>"The Matrix", :value=>70}
 => {:description=>"The Matrix", :value=>70, payload: {} }}
