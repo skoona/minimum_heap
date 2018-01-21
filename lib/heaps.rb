@@ -6,15 +6,25 @@
 # equal to the data of that node’s children and the tree is complete.
 ##
 
-require "heaps/version"
-require "heaps/base_node"
-require "heaps/node"
-require "heaps/empty_node"
-require "heaps/heap_base"
-require "heaps/min_heap"
-require "heaps/max_heap"
+require_relative "heaps/version"
+require_relative "heaps/base_node"
+require_relative "heaps/node"
+require_relative "heaps/empty_node"
+require_relative "heaps/heap_base"
+require_relative "heaps/min_heap"
+require_relative "heaps/max_heap"
 
 module Heaps
 
 end
 
+
+require_relative 'lists/linked_commons'
+require_relative 'lists/link_node'
+require_relative 'lists/linked_list'
+require_relative 'lists/doubly_linked_list'
+require_relative 'lists/circular_linked_list'
+
+module Lists
+
+end

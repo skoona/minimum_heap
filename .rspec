@@ -1,3 +1,4 @@
 --format html
 --out docs/rspec.html
 --color
+--require spec_helper

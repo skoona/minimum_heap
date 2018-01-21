@@ -1,6 +1,5 @@
 
-require "spec_helper"
-require "heap_commons_examples"
+require "support/heap_commons_examples"
 
 RSpec.describe Heaps::MinHeap, "Minimum Heap Implementation wihtout Array storage" do
 
